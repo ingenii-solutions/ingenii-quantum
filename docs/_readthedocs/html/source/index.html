@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Ingenii Quantum’s Documentation! &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ingenii_quantum</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to Ingenii Quantum’s Documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-ingenii-quantum-s-documentation">
+<h1>Welcome to Ingenii Quantum’s Documentation!<a class="headerlink" href="#welcome-to-ingenii-quantum-s-documentation" title="Link to this heading"></a></h1>
+<p>Ingenii Quantum is a Python package for quantum and quantum-inspired machine learning.</p>
+<section id="quantum-convolutional-layer-2d-and-3d">
+<h2>Quantum Convolutional Layer (2D and 3D)<a class="headerlink" href="#quantum-convolutional-layer-2d-and-3d" title="Link to this heading"></a></h2>
+<p>It is designed to reduce the complexity of the classical 2D/3D CNN while maintaining its prediction performance.
+The hybrid CNN replaces a convolutional layer with a quantum convolutional layer. Each classical convolutional filter
+is replaced by a quantum circuit, which acts as a quantum filter. Each quantum circuit is divided into two blocks:
+the data encoding, which maps the input data into a quantum circuit, and the quantum transformation, where quantum operations
+are applied to retrieve information from the encoded data. The package contains an implementation for 2D data (images)
+and for 3D data (volumes).</p>
+</section>
+<section id="quantum-fully-connected-layer">
+<h2>Quantum Fully-Connected Layer<a class="headerlink" href="#quantum-fully-connected-layer" title="Link to this heading"></a></h2>
+<p>It is designed to construct hybrid quantum-classical neural networks, where the quantum layer is a fully-connected layer.
+The quantum layer is a parameterized quantum circuit composed of three parts: a data encoding that maps the classical data
+into a quantum circuit, a parameterized quantum circuit that performs quantum operations with trainable parameters,
+and measurements that produce the output of the layer. Multiple quantum architectures are provided, extracted from
+previous studies of hybrid neural networks.</p>
+<p><strong>Update:</strong> To improve efficiency of the training, the codes have been rewritten using Pennylane instead of Qiskit.
+You can still run the algorithm on Qiskit devices by providing the suitable backend name.</p>
+</section>
+<section id="quantum-fusion-model">
+<h2>Quantum Fusion Model<a class="headerlink" href="#quantum-fusion-model" title="Link to this heading"></a></h2>
+<p>It is designed to efficiently integrate the extracted features from two classical neural network models to produce enhanced predictions.
+The proposed model strategically integrates 3D-CNNs and SG-CNNs to leverage their respective strengths in processing diverse
+facets of the training data. The simulation results demonstrate the superior performance of the quantum fusion model
+relative to state-of-the-art classical models.</p>
+</section>
+<section id="quantum-hadamard-edge-detection-2d-and-3d">
+<h2>Quantum Hadamard Edge Detection (2D and 3D)<a class="headerlink" href="#quantum-hadamard-edge-detection-2d-and-3d" title="Link to this heading"></a></h2>
+<p>Performs edge detection for 2D data (images) and 3D data (volumes) using quantum operations.</p>
+</section>
+<section id="quantum-inspired-image-filter">
+<h2>Quantum-Inspired Image Filter<a class="headerlink" href="#quantum-inspired-image-filter" title="Link to this heading"></a></h2>
+<p>This quantum-inspired filter is especially useful for highlighting regions with varying contrast and identifying regions of interest.
+This transformation adjusts pixel intensity based on its local contrast and overall neighborhood contribution, enhancing segmentation
+by emphasizing boundaries and transitions in the image.</p>
+</section>
+<section id="quantum-state-visualizations">
+<h2>Quantum State Visualizations<a class="headerlink" href="#quantum-state-visualizations" title="Link to this heading"></a></h2>
+<p>To understand the behavior and transformations of quantum circuits, visualizations play a key role.
+This library offers multiple state and circuit visualizations:</p>
+<ul class="simple">
+<li><p><strong>State Space</strong>: Represents the evolution of quantum states at different stages of the circuit.
+Each computational state is shown as a colored ball where the size indicates the probability of the corresponding basis state
+and the color represents the phase.</p></li>
+<li><p><strong>Phase Disks</strong>: Condensed representations of the state space visualization. Each qubit has a phase disk,
+where the fullness represents the probability and the color indicates the phase.</p></li>
+<li><p><strong>Bloch Sphere</strong>: A geometric representation of one-qubit systems. The state of a qubit is depicted as a point on the sphere,
+visually demonstrating how the qubit’s state evolves under quantum operations.</p></li>
+<li><p><strong>Q-Sphere</strong>: Generalizes the Bloch sphere for multiple-qubit systems. Each computational basis state appears as a point on the sphere,
+where the radius represents probability, the color indicates the phase, and the latitude represents the number of 0s and 1s in the state.</p></li>
+</ul>
+</section>
+<section id="quantum-neural-network-statistics">
+<h2>Quantum Neural Network Statistics<a class="headerlink" href="#quantum-neural-network-statistics" title="Link to this heading"></a></h2>
+<p>Provides metrics to evaluate the balance between performance and complexity in quantum neural networks. Two key metrics are:</p>
+<ul class="simple">
+<li><p><strong>Entangling Capacity</strong>: Measures the circuit’s ability to generate entanglement among qubits. This property is crucial for
+quantum computing, as entanglement is required for tasks that classical computers cannot efficiently solve.</p></li>
+<li><p><strong>Expressibility</strong>: Refers to the ability of a quantum circuit to generate a wide variety of quantum states from the input data.
+High expressibility ensures that the circuit can approximate any target quantum state, which is crucial for quantum neural networks.</p></li>
+</ul>
+</section>
+<section id="tensor-network-decomposition">
+<h2>Tensor Network Decomposition<a class="headerlink" href="#tensor-network-decomposition" title="Link to this heading"></a></h2>
+<p>One of the most effective tensor decompositions for compressing convolutional layers is the Tucker decomposition.
+This method breaks down the original four-dimensional weight tensor of a convolutional layer into multiple smaller tensors.
+This approach is particularly relevant in medical imaging, where small datasets and complex models are common.
+Tucker decomposition compresses over-parameterized layers, preserving essential information for accurate predictions while reducing
+the number of parameters, making the model faster and more efficient.</p>
+</section>
+<section id="quantum-optimization-for-image-segmentation">
+<h2>Quantum Optimization for Image Segmentation<a class="headerlink" href="#quantum-optimization-for-image-segmentation" title="Link to this heading"></a></h2>
+<p>Provides the graph mapping for image segmentation and the formulation as a QUBO problem.
+Many quantum and quantum-inspired algorithms, such as quantum annealing and QAOA, can then be used to find the optimal segmentation mask.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ingenii_quantum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.html">ingenii_quantum.visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.html#ingenii-quantum-hybrid-networks">ingenii_quantum.hybrid_networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.html#ingenii-quantum-qubo">ingenii_quantum.qubo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.html#ingenii-quantum-tensor-networks">ingenii_quantum.tensor_networks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>To install Ingenii Quantum, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ingenii-quantum
+</pre></div>
+</div>
+</section>
+</section>
+<section id="table-of-contents">
+<h1>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
