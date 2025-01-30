@@ -1,0 +1,1211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.hybrid_networks.filters &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.hybrid_networks.filters</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ingenii_quantum.hybrid_networks.filters</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">QuantumRegister</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">,</span> <span class="n">transpile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_aer</span><span class="w"> </span><span class="kn">import</span> <span class="n">AerSimulator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit.quantum_info</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pauli</span><span class="p">,</span> <span class="n">random_unitary</span><span class="p">,</span> <span class="n">Operator</span><span class="p">,</span> <span class="n">SparsePauliOp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit.circuit.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauliEvolutionGate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_ibm_runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">EstimatorV2</span> <span class="k">as</span> <span class="n">Estimator</span><span class="p">,</span> <span class="n">SamplerV2</span> <span class="k">as</span> <span class="n">Sampler</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">roll_numpy</span><span class="p">,</span> <span class="n">roll_torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<div class="viewcode-block" id="QuantumFiltersBase">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuantumFiltersBase</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">n_dimensions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">stride</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">shots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">=</span> <span class="n">n_dimensions</span>
+
+        <span class="c1"># Calculate the number of qubits</span>
+        <span class="k">if</span> <span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;angle&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span> <span class="o">=</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="n">n_dimensions</span>
+        <span class="k">elif</span> <span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;frqi&#39;</span><span class="p">:</span>    
+            <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="n">n_dimensions</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Data encoding method not implemented. The available encoding methods are frqi and angle.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="n">stride</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shots</span> <span class="o">=</span> <span class="n">shots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="c1"># set CUDA for PyTorch</span>
+            <span class="n">use_cuda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">use_cuda</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">set_device</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">backend</span><span class="o">==</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The only valid backend names are &quot;torch&quot; and &quot;aer_simulator&quot;. You can also provide a Qiskit Backend directly.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Initialise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">gate_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;G1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CNOT&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;G2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CNOT&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;G3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CNOT&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select_gates_qubits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gates_name</span><span class="p">,</span> <span class="n">num_gates</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects random gates from the G1, G2 and G3 family, and the qubits to</span>
+<span class="sd">            which the gates are applied to.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            gates_name (str): name of the family of quantum gates. Either G1, G2, G3 or Ising</span>
+<span class="sd">            num_gates (int): depth of the quantum circuits</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            gates_set (list): List of gates for the quantum filter</span>
+<span class="sd">            qubits_set (list): List of qubits where the gates are applied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Select random gate</span>
+        <span class="n">gates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gate_names</span><span class="p">[</span><span class="n">gates_name</span><span class="p">]</span>
+        <span class="n">gates_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample</span><span class="p">(</span><span class="n">gates</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_gates</span><span class="p">)]</span>
+
+        <span class="n">qubit_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">))</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_add_qubit_set</span><span class="p">(</span><span class="n">gate</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">gate</span> <span class="o">==</span> <span class="s1">&#39;CNOT&#39;</span><span class="p">:</span>
+                <span class="c1"># Select qubit 1 and 2 (different qubits)</span>
+                <span class="n">qbit1</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">qubit_idx2</span> <span class="o">=</span> <span class="n">qubit_idx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">qubit_idx2</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">qbit1</span><span class="p">)</span>
+                <span class="n">qbit2</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">qubit_idx2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Select qubit</span>
+                <span class="n">qbit</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">qbit</span><span class="p">]</span>
+
+        <span class="c1"># Store qubit list of applied gates</span>
+        <span class="n">qubits_set</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_add_qubit_set</span><span class="p">(</span><span class="n">gate</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">gates_set</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_G_gates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qc</span><span class="p">,</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects a set of random qubits and random gates from the G1, G2 or G3</span>
+<span class="sd">        family, and stores them in a list.</span>
+<span class="sd">        These gates form the random quantum circuit.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qc (QuantumCircuit): quantum circuit</span>
+<span class="sd">            gates_set (list): List of quantum gates that form the quantum</span>
+<span class="sd">                reservoir</span>
+<span class="sd">            qubits_set (list): List of qubits to which the quantum gates are</span>
+<span class="sd">                applied to</span>
+<span class="sd">            measure (bool): mneasure all the qubits (except the ancilla) at the</span>
+<span class="sd">                end of the circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Apply random gates to random qubits</span>
+        <span class="k">for</span> <span class="n">gate</span><span class="p">,</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">gate</span> <span class="o">==</span> <span class="s1">&#39;CNOT&#39;</span><span class="p">:</span>  <span class="c1"># For 2-qubit gates</span>
+                <span class="c1"># Select qubit 1 and 2 (different qubits)</span>
+                <span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span> <span class="o">=</span> <span class="n">qubit</span>
+                <span class="c1"># Apply gate to qubits</span>
+                <span class="n">qc</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># For 1-qubit gates</span>
+                <span class="c1"># Select qubit</span>
+                <span class="n">qbit</span> <span class="o">=</span> <span class="n">qubit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># Apply gate</span>
+                <span class="k">if</span> <span class="n">gate</span> <span class="o">==</span> <span class="s1">&#39;X&#39;</span><span class="p">:</span>
+                    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">qbit</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">gate</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+                    <span class="n">qc</span><span class="o">.</span><span class="n">s</span><span class="p">(</span><span class="n">qbit</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">gate</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">:</span>
+                    <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qbit</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">gate</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span>
+                    <span class="n">qc</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="n">qbit</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown quantum gate:&quot;</span><span class="p">,</span> <span class="n">gate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">measure</span><span class="p">:</span>
+            <span class="n">qc</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select_Ising_coefficinets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines random Ising coefficients.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Js (float): J coefficients</span>
+<span class="sd">            h (float): h coefficient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Define parameters Ising model</span>
+        <span class="n">Js</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">h_over_Js</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">Js</span><span class="o">*</span><span class="n">h_over_Js</span>
+        <span class="k">return</span> <span class="n">Js</span><span class="p">,</span> <span class="n">h</span>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_ising_gates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Js</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies quantum evolution under the transverse field Ising model.</span>
+<span class="sd">        The parameters of the Ising model are chosen according to</span>
+<span class="sd">        R. Martínez-Peña et al. (2021).</span>
+<span class="sd">        Js ~ N(0.75, 0.1), Jij ~ U(-Js/2, Js/2) and hi = h such that h/Js = 0.1</span>
+<span class="sd">        Args:</span>
+<span class="sd">            Js (float): J coefficients</span>
+<span class="sd">            h (float): h coefficient</span>
+<span class="sd">            t (float): time evolution</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (QuantumCircuit): quantum circuit representing the evolution of</span>
+<span class="sd">            the Ising model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Define parameters Ising model</span>
+        <span class="k">if</span> <span class="n">Js</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating new coefficients&#39;</span><span class="p">)</span>
+            <span class="n">Js</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">h_over_Js</span> <span class="o">=</span> <span class="mf">0.1</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">Js</span><span class="o">*</span><span class="n">h_over_Js</span>
+
+        <span class="c1"># Get list of all qubits and pairs of qubits</span>
+        <span class="n">qubit_idxs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">))</span>
+
+        <span class="c1"># Define the Ising model operators</span>
+        <span class="n">pauli_op</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">name_gate</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+        <span class="k">for</span> <span class="n">q1_idx</span><span class="p">,</span> <span class="n">q2_idx</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">qubit_idxs</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="c1"># Interaction operators</span>
+            <span class="n">name</span> <span class="o">=</span> \
+                <span class="n">name_gate</span><span class="p">[:</span><span class="n">q1_idx</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span> <span class="o">+</span> \
+                <span class="n">name_gate</span><span class="p">[</span><span class="n">q1_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">q2_idx</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="s1">&#39;Z&#39;</span> <span class="o">+</span> <span class="n">name_gate</span><span class="p">[</span><span class="n">q2_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">Js</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">Js</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">pauli_op</span> <span class="o">+=</span> <span class="n">coef</span><span class="o">*</span><span class="n">SparsePauliOp</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">q_idx</span> <span class="ow">in</span> <span class="n">qubit_idxs</span><span class="p">:</span>  <span class="c1"># Single qubit operators</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name_gate</span><span class="p">[:</span><span class="n">q_idx</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;X&#39;</span> <span class="o">+</span> <span class="n">name_gate</span><span class="p">[(</span><span class="n">q_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">):]</span>
+            <span class="n">coef</span> <span class="o">=</span> <span class="n">h</span>
+            <span class="n">pauli_op</span> <span class="o">+=</span> <span class="n">coef</span><span class="o">*</span><span class="n">SparsePauliOp</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Time evolution circuit</span>
+        <span class="n">evolution_gate</span> <span class="o">=</span> <span class="n">PauliEvolutionGate</span><span class="p">(</span><span class="n">pauli_op</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">qc_ham</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+        <span class="n">qc_ham</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evolution_gate</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">qc_ham</span>
+
+<div class="viewcode-block" id="QuantumFiltersBase.generate_unitaries">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_unitaries">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_unitaries</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">gates_name</span><span class="o">=</span><span class="s1">&#39;G3&#39;</span><span class="p">,</span> <span class="n">num_gates</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">num_filters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">num_features</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">unitaries_file_name</span><span class="o">=</span><span class="s1">&#39;unitaries.pickle&#39;</span><span class="p">,</span>
+            <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum unitaries that represent the quantum reservoirs</span>
+<span class="sd">        (random quantum circuits)</span>
+<span class="sd">        This function is only used with Pytorch backend</span>
+<span class="sd">        Args:</span>
+<span class="sd">            gates_name (str): name of the family of quantum gates. Either G1,</span>
+<span class="sd">            G2, G3 or Ising</span>
+<span class="sd">            num_gates (int): depth of the quantum circuits</span>
+<span class="sd">            num_filters (int): Number of filters to apply to each feature</span>
+<span class="sd">            num_features (int): Number of features of the data</span>
+<span class="sd">            unitaries_file_name (str): name of the file containing unitary list</span>
+<span class="sd">                (only needed if save=True)</span>
+<span class="sd">            save (bool): Whether the generated unitaries are saved to a file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">!=</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;This function is only callable with the &#39;torch&#39; backend&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span> <span class="o">=</span> <span class="n">num_filters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span> <span class="o">=</span> <span class="n">gates_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;nqbits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_nonlocal_gates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_filters</span><span class="p">):</span>
+            <span class="n">U_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_features</span><span class="p">):</span>
+                <span class="c1"># Store circuit parameters</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_gates</span> <span class="o">=</span> <span class="n">num_gates</span>
+                <span class="k">if</span> <span class="n">gates_name</span> <span class="o">==</span> <span class="s1">&#39;random&#39;</span><span class="p">:</span>
+                    <span class="n">U</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">random_unitary</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                    <span class="n">U_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;family_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Universal (Haar)&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;nqbits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">gates_name</span> <span class="o">==</span> <span class="s1">&#39;Ising&#39;</span><span class="p">:</span>
+                        <span class="c1"># If the quantum reservoir is the Ising model</span>
+                        <span class="n">qc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_ising_gates</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;family_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Universal (Ising)&#39;</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">depth</span><span class="p">())</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_nonlocal_gates&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">num_nonlocal_gates</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Otherwise, if it is one of the G families</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;family_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Clifford (subgroup)&#39;</span> <span class="k">if</span> <span class="n">gates_name</span> <span class="o">==</span> <span class="s2">&quot;G1&quot;</span> <span class="k">else</span> <span class="s1">&#39;Clifford group&#39;</span> <span class="k">if</span> <span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;G2&#39;</span> <span class="k">else</span> <span class="s1">&#39;Universal&#39;</span>
+                        <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span> <span class="o">=</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_select_gates_qubits</span><span class="p">(</span><span class="n">gates_name</span><span class="p">,</span> <span class="n">num_gates</span><span class="p">)</span>
+                        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+                        <span class="c1"># Random quantum circuit with gates</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_G_gates</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">depth</span><span class="p">())</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_nonlocal_gates&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">num_nonlocal_gates</span><span class="p">())</span>
+                    <span class="c1"># Get unitary</span>
+                    <span class="n">U</span> <span class="o">=</span> <span class="n">Operator</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span><span class="o">.</span><span class="n">data</span> 
+                    <span class="n">U_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">U_list</span><span class="p">)</span>
+        <span class="c1"># Save unitaries to file</span>
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">unitaries_file_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if file names are defined, otherwise it creates them.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            saved_gates_filename (str/None): Name of the gates file</span>
+<span class="sd">            saved_qubits_filename (str/None): Name of the qubits file</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            saved_gates_filename (str): Name of the gates file</span>
+<span class="sd">            saved_qubits_filename (str): Name of the qubits file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">saved_gates_filename</span> <span class="o">=</span> \
+            <span class="n">saved_gates_filename</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;gates_list_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="si">}</span><span class="s1">D.pickle&#39;</span>
+        <span class="n">saved_qubits_filename</span> <span class="o">=</span> \
+            <span class="n">saved_qubits_filename</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;qubits_list_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="si">}</span><span class="s1">D.pickle&#39;</span>
+
+        <span class="k">return</span> <span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span>
+
+<div class="viewcode-block" id="QuantumFiltersBase.generate_reservoirs">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_reservoirs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_reservoirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gates_name</span><span class="o">=</span><span class="s1">&#39;G3&#39;</span><span class="p">,</span> <span class="n">num_gates</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">num_filters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">num_features</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;reservoir.pickle&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate sets of random quantum gates and their associated qubits and</span>
+<span class="sd">        saves them for Qiskit backends, and unitary tensors for torch backend.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            gates_name (str): name of the family of quantum gates. Either G1,</span>
+<span class="sd">            G2, G3 or Ising</span>
+<span class="sd">            num_gates (int): depth of the quantum circuits</span>
+<span class="sd">            num_filters (int): Number of filters to apply to each feature</span>
+<span class="sd">            num_features (int): Number of features of the data</span>
+<span class="sd">            save (bool): Save the gates and qubits to pickle files</span>
+<span class="sd">            filename (str): File name for saved gates or unitaries</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_unitaries</span><span class="p">(</span> <span class="n">gates_name</span><span class="p">,</span> <span class="n">num_gates</span><span class="p">,</span> <span class="n">num_filters</span><span class="p">,</span>
+                    <span class="n">num_features</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="n">save</span><span class="p">,</span> <span class="n">unitaries_file_name</span> <span class="o">=</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">saved_gates_filename</span> <span class="o">=</span> <span class="s1">&#39;gates_&#39;</span> <span class="o">+</span> <span class="n">filename</span>
+                <span class="n">saved_qubits_filename</span> <span class="o">=</span> <span class="s1">&#39;qubits_&#39;</span> <span class="o">+</span> <span class="n">filename</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">saved_gates_filename</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">saved_qubits_filename</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_qc</span><span class="p">(</span><span class="n">gates_name</span><span class="p">,</span> <span class="n">num_gates</span><span class="p">,</span> <span class="n">num_filters</span><span class="p">,</span>
+            <span class="n">num_features</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span><span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="QuantumFiltersBase.generate_qc">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_qc">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_qc</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">gates_name</span><span class="o">=</span><span class="s1">&#39;G3&#39;</span><span class="p">,</span> <span class="n">num_gates</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">num_filters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">num_features</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">saved_gates_filename</span><span class="o">=</span><span class="s1">&#39;gates.pickle&#39;</span><span class="p">,</span> <span class="n">saved_qubits_filename</span><span class="o">=</span><span class="s1">&#39;qubits.pickle&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate sets of random quantum gates and their associated qubits and</span>
+<span class="sd">        saves them. This function is only used with Qiskit backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            gates_name (str): name of the family of quantum gates. Either G1,</span>
+<span class="sd">            G2, G3 or Ising</span>
+<span class="sd">            num_gates (int): depth of the quantum circuits</span>
+<span class="sd">            num_filters (int): Number of filters to apply to each feature</span>
+<span class="sd">            num_features (int): Number of features of the data</span>
+<span class="sd">            save (bool): Save the gates and qubits to pickle files</span>
+<span class="sd">            saved_gates_filename (str): File name for saved gates set</span>
+<span class="sd">            saved_qubits_filename (str): File name for saved qubit set</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;This function is only callable with the Qiskit backends&quot;</span><span class="p">)</span>
+
+        <span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_file_names</span><span class="p">(</span><span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Store circuit parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span> <span class="o">=</span> <span class="n">gates_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span> <span class="o">=</span> <span class="n">num_filters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;family_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Clifford (subgroup)&#39;</span> <span class="k">if</span> <span class="n">gates_name</span> <span class="o">==</span> <span class="s2">&quot;G1&quot;</span> <span class="k">else</span> <span class="s1">&#39;Clifford group&#39;</span> <span class="k">if</span> <span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;G2&#39;</span> <span class="k">else</span> <span class="s1">&#39;Universal&#39;</span> <span class="k">if</span> <span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;G3&#39;</span> <span class="k">else</span> <span class="s1">&#39;Universal (Ising)&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_circuits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;nqbits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_nonlocal_gates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_gates</span> <span class="o">=</span> <span class="n">num_gates</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;Ising&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">J_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_filters</span><span class="p">):</span>
+                <span class="n">J_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">h_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_features</span><span class="p">):</span>
+                    <span class="n">Js</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_Ising_coefficinets</span><span class="p">()</span>   
+                    <span class="n">J_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Js</span><span class="p">)</span>
+                    <span class="n">h_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">J_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">J_list</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+                <span class="c1"># Save Ising coefficients to file</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_gates_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">J_list</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_qubits_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">h_list</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>             
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_filters</span><span class="p">):</span>
+                <span class="c1"># Random quantum circuit for each filter</span>
+                <span class="n">gates_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">qubits_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_features</span><span class="p">):</span>
+                    <span class="c1"># Random quantum circuit for each feature</span>
+                    <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_select_gates_qubits</span><span class="p">(</span><span class="n">gates_name</span><span class="p">,</span> <span class="n">num_gates</span><span class="p">)</span>
+                    <span class="n">gates_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gates_set</span><span class="p">)</span>
+                    <span class="n">qubits_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubits_set</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gates_list</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubits_list</span><span class="p">)</span>
+
+            <span class="c1"># Save gates and qubits to file</span>
+            <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_gates_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_qubits_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="QuantumFiltersBase.load_reservoirs">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_reservoirs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_reservoirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gates_name</span><span class="o">=</span><span class="s1">&#39;G3&#39;</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Load set of quantum gates and qubits for Qiskit backends, or unitaries </span>
+<span class="sd">        for pytorch backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            gates_name (str): name of the family of quantum gates. Either G1,</span>
+<span class="sd">            G2, G3 or Ising</span>
+<span class="sd">            filename (str): File name for saved gates set or unitaries</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">==</span><span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_unitaries</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_gates</span><span class="p">(</span><span class="n">gates_name</span><span class="p">,</span> <span class="s1">&#39;gates_&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;qubits_&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="QuantumFiltersBase.load_gates">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_gates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_gates</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">gates_name</span><span class="o">=</span><span class="s1">&#39;G3&#39;</span><span class="p">,</span>
+            <span class="n">saved_gates_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">saved_qubits_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Load set of quantum gates and qubits. This function is only used with</span>
+<span class="sd">        Qiskit backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            gates_name (str): name of the family of quantum gates. Either G1,</span>
+<span class="sd">            G2, G3 or Ising</span>
+<span class="sd">            saved_gates_filename (str): File name for saved gates set</span>
+<span class="sd">            saved_qubits_filename (str): File name for saved qubit set</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_file_names</span><span class="p">(</span><span class="n">saved_gates_filename</span><span class="p">,</span> <span class="n">saved_qubits_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;This function is only callable whith the Qiskit backends&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_gates_filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_qubits_filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span> <span class="o">=</span> <span class="n">gates_name</span>
+        <span class="c1"># Store circuit parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;Ising&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">J_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_gates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">nqbits</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span><span class="p">))))</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">nqbits</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Incorrect number of qubits of the loaded quantum circuits&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="QuantumFiltersBase.load_unitaries">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_unitaries">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_unitaries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Loads the unitaries.  This function is only used with Pytorch backend.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            file_name (str): File name for unitaries</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">!=</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;This function is only callable with the &#39;torch&#39; backend&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="c1"># Store circuit parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">nqbits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+
+        <span class="k">if</span> <span class="n">nqbits</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Incorrect number of qubits of the loaded quantum circuits&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_FRQI_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Flexible representation of Quantum Images encoding. Takes an (nxn) or</span>
+<span class="sd">        (nxnxn) box and returns the encoded quantum circuit.</span>
+<span class="sd">        This function is only used with Qiskit backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            box (np.array): (nxn) or (nxnxn) box to be encoded</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            qc (QuantumCircuit): quantum circuit with FRQI encoding</span>
+<span class="sd">            initial_state (np.array): Initial state array</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># check if the box has the correct shape</span>
+        <span class="k">assert</span> <span class="n">box</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Calculate binary string of basis qubits</span>
+        <span class="n">qbit_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_add_coeffs</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+            <span class="n">q_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">qbit_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]])</span>
+            <span class="n">coefs</span><span class="p">[</span><span class="n">q_str</span> <span class="o">+</span> <span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+            <span class="n">coefs</span><span class="p">[</span><span class="n">q_str</span> <span class="o">+</span> <span class="s1">&#39;1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+
+        <span class="n">l_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">_add_coeffs</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">l_idx</span><span class="p">)</span>
+                    <span class="n">l_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                        <span class="n">_add_coeffs</span><span class="p">(</span><span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">],</span> <span class="n">l_idx</span><span class="p">)</span>
+                        <span class="n">l_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># store them in a dictionary and sort it by keys</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">coefs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Define quantum circuit</span>
+        <span class="n">cr</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">,</span> <span class="n">cr</span><span class="p">)</span>
+
+        <span class="c1"># Calculate initial state</span>
+        <span class="n">initial_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">coefs</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">coefs</span><span class="p">)))</span>
+        <span class="n">initial_state</span><span class="p">[:</span><span class="n">coefs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefs</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">initial_state</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_angle_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Angle encoding for images. Takes an (nxn) or</span>
+<span class="sd">        (nxnxn) box and returns the encoded quantum circuit.</span>
+<span class="sd">        This function is only used with Qiskit backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            box (np.array): (nxn) or (nxnxn) box to be encoded</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            qc (QuantumCircuit): quantum circuit with angle encoding</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># check if the box has the correct shape</span>
+        <span class="k">assert</span> <span class="n">box</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1"># Define quantum circuit</span>
+        <span class="n">cr</span> <span class="o">=</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+        <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">qr</span><span class="p">,</span> <span class="n">cr</span><span class="p">)</span>
+        <span class="n">flattened_box</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">angle</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">flattened_box</span><span class="p">):</span>
+            <span class="n">qc</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_scale_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scale the data to [0, pi/2) (each feature is scaled separately)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): input data, shape (n_samples, num_features, N,N,N)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (tensor): scaled data, shape (n_samples, num_features, N,N,N)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_min</span><span class="p">,</span> <span class="n">new_max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>  <span class="c1"># Scale each feature independently</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">data_slice</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">data_slice</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+                <span class="n">v_min</span><span class="p">,</span> <span class="n">v_max</span> <span class="o">=</span> <span class="n">data_slice</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">data_slice</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">v_min</span> <span class="o">&lt;</span> <span class="n">v_max</span><span class="p">:</span>
+                    <span class="n">data_slice</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_slice</span> <span class="o">-</span> <span class="n">v_min</span><span class="p">)</span> <span class="o">/</span> \
+                        <span class="p">(</span><span class="n">v_max</span> <span class="o">-</span> <span class="n">v_min</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">new_max</span> <span class="o">-</span> <span class="n">new_min</span><span class="p">)</span> \
+                        <span class="o">+</span> <span class="n">new_min</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_boxQiskit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        For a given box of the image runs the FRQI encoding + random quantum</span>
+<span class="sd">        circuit.  This function is only used with Qiskit backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            box (np.array): shape (n,n). Input data</span>
+<span class="sd">            gates_set (list): Set of random quantum gates</span>
+<span class="sd">            qubits_set (list): List of qubits to apply the quantum gates</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: Quantum reservoir for a box in the image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;frqi&#39;</span><span class="p">:</span>
+            <span class="c1"># FRQI encoding</span>
+            <span class="n">qc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FRQI_encoding</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;angle&#39;</span><span class="p">:</span>
+            <span class="c1"># Angle encoding</span>
+            <span class="n">qc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_encoding</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+    
+        <span class="c1"># Random quantum circuit</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span> <span class="o">==</span> <span class="s1">&#39;Ising&#39;</span><span class="p">:</span>
+            <span class="n">qc_Ising</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_ising_gates</span><span class="p">(</span><span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">)</span>
+            <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span><span class="n">qc_Ising</span><span class="p">,</span> <span class="n">qubits</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">))</span>
+            <span class="c1">#qc += qc_Ising</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_G_gates</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">depth</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;num_nonlocal_gates&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">num_nonlocal_gates</span><span class="p">())</span>
+        <span class="c1"># Measure</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+        <span class="c1"># Get counts</span>
+        <span class="n">is_simulator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span> <span class="c1"># Check if we&#39;re using a simulator or quantum hardware</span>
+        <span class="k">with</span> <span class="n">Session</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span> <span class="c1"># Create a session with such backend</span>
+            <span class="n">sampler</span> <span class="o">=</span> <span class="n">Sampler</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">session</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span><span class="s1">&#39;frqi&#39;</span> <span class="k">else</span> <span class="n">Estimator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+            <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">default_shots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shots</span>
+            <span class="n">qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
+
+            <span class="c1"># If running on real hardware (not a simulator), apply error mitigation</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_simulator</span><span class="p">:</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">dynamical_decoupling</span><span class="o">.</span><span class="n">enable</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">dynamical_decoupling</span><span class="o">.</span><span class="n">sequence_type</span> <span class="o">=</span> <span class="s2">&quot;XY4&quot;</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">twirling</span><span class="o">.</span><span class="n">enable_gates</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">twirling</span><span class="o">.</span><span class="n">num_randomizations</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;frqi&#39;</span><span class="p">:</span>                
+                <span class="n">pub</span> <span class="o">=</span> <span class="p">(</span><span class="n">qc</span><span class="p">,)</span> <span class="c1"># Prepare input</span>
+                <span class="n">job</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">pub</span><span class="p">])</span> 
+                <span class="n">counts</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+                <span class="c1"># Calculate binary string of basis qubits</span>
+                <span class="n">new_counts</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">qbits</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">qbits</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">qc</span><span class="o">.</span><span class="n">num_qubits</span><span class="p">)</span><span class="c1">#self.nqbits-1)</span>
+                <span class="p">]</span>
+                <span class="c1">#print(counts, new_counts)</span>
+                <span class="n">new_counts</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">new_counts</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">new_counts</span>
+            
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exp_vals</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># Get operators</span>
+                <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">[:</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">op</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                    <span class="c1"># Run expected value</span>
+                    <span class="n">isa_hamiltonian</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">apply_layout</span><span class="p">(</span><span class="n">qc</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span>
+                    <span class="n">pub</span> <span class="o">=</span> <span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">isa_hamiltonian</span><span class="p">,)</span>
+                    <span class="n">job</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">pub</span><span class="p">])</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">exp_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">evs</span><span class="p">)</span>               
+
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_vals</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_filter_qiskit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Runs the quantum circuit for one feature of the data.  This function</span>
+<span class="sd">        is only used with Qiskit backends.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (np.array): shape (N,N), channel of the image</span>
+<span class="sd">            gates_set (list): Set of random quantum gates</span>
+<span class="sd">            qubits_set (list): List of qubits to apply the quantum gates</span>
+<span class="sd">            scale (bool): Scale the input image</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: Quantum reservoir for the whole image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">transpose_idxs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Get boxes from data</span>
+        <span class="n">strided_window</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">roll_numpy</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+            <span class="n">dx</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">dz</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">strided_window</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_run_per_box</span><span class="p">(</span><span class="n">box</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">box</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="c1"># Run the QC if the box is non-zero valued</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_run_boxQiskit</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">result</span><span class="p">[:</span><span class="n">size</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Return zeros if the box is all zero-valued</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">size</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_run_per_box</span><span class="p">(</span><span class="n">windows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">windows</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Every box of the image</span>
+        <span class="p">]</span>
+
+        <span class="n">fin_shape</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">)</span>
+        <span class="n">fin_shape_parameters</span> <span class="o">=</span> <span class="p">(</span><span class="n">fin_shape</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span>
+
+        <span class="c1"># Reshape the results in the original shape</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">transpose_idxs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">])</span> \
+            <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">fin_shape_parameters</span><span class="p">)</span>  <span class="c1"># Transpose to original shape</span>
+
+        <span class="c1"># Apply zero-mask</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span><span class="p">)</span>
+
+        <span class="c1"># Reshape to rolling windows shape</span>
+        <span class="n">windows_reshape</span> <span class="o">=</span> <span class="n">windows</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span><span class="p">)</span>
+
+        <span class="c1"># Find zero-valued values of the original data</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">windows_reshape</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">transpose_idxs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">])</span> \
+            <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">fin_shape_parameters</span><span class="p">)</span>  <span class="c1"># Transpose to original shape</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">*=</span> <span class="n">mask</span>  <span class="c1"># Apply mask</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_filter_torch_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">U</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Runs quantm filter with angle encoding.</span>
+<span class="sd">        This function is only used with Pytorch backend.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): input data (one feature), shape (num_samples, N,N,N)</span>
+<span class="sd">            tol (float): tolerance for the masking matrix. All values from the</span>
+<span class="sd">            original data which are smaller than the tolerance are set to 0</span>
+<span class="sd">            U (tensor): Unitary matrix representing the random quantum circuit</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (tensor): quantum filter applied to data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1">#print(&#39;data&#39;, data.shape)</span>
+        <span class="c1"># Get measurement operator</span>
+        <span class="n">Zs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">[:</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+            <span class="n">Zs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">Pauli</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()))</span>
+
+        <span class="c1"># 1. Get rolling windows</span>
+        <span class="n">reshape_idxs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="c1">#print(&#39;reshape_idxs&#39;, reshape_idxs)</span>
+        <span class="n">strided_window</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">unfold</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">)</span>
+        <span class="c1">#print(&#39;strided_window&#39;, strided_window.shape)</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">strided_window</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">reshape_idxs</span><span class="p">)</span>
+        <span class="c1">#print(&#39;windows&#39;, windows.shape)</span>
+        <span class="c1"># 2. Get initial state (rotation for each qubit)</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="n">flat_block</span> <span class="o">=</span> <span class="n">windows</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="o">*</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="n">cos_block</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">flat_block</span><span class="p">)</span>
+        <span class="n">sin_block</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">flat_block</span><span class="p">)</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">cos_block</span><span class="p">[:,:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">sin_block</span><span class="p">[:,:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span>
+        <span class="c1"># 2. Get the tensor product of the [cos(theta),sin(theta)] vectors to create the final state</span>
+        <span class="n">letters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span>
+        <span class="n">l1</span> <span class="o">=</span> <span class="n">letters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Create the formula string</span>
+        <span class="n">formula</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">l1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)])</span><span class="si">}</span><span class="s2">-&gt;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">letters</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="c1"># Create the list of products using list comprehension</span>
+        <span class="n">prods</span> <span class="o">=</span> <span class="p">[</span><span class="n">prod</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)]</span>
+        <span class="n">all_prod</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span><span class="o">*</span><span class="n">prods</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+        <span class="c1"># 3. Apply unitary matrix</span>
+        <span class="n">apply_U</span> <span class="o">=</span> <span class="p">(</span><span class="n">U</span> <span class="o">@</span> <span class="n">all_prod</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="c1"># 4. Calculate expected values</span>
+        <span class="n">exps</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">Z</span> <span class="ow">in</span> <span class="n">Zs</span><span class="p">:</span>
+            <span class="n">exp</span> <span class="o">=</span> <span class="p">((</span><span class="n">apply_U</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span> <span class="o">@</span> <span class="n">Z</span><span class="p">)</span> <span class="o">*</span> <span class="n">apply_U</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">exps</span> <span class="o">=</span> <span class="n">exp</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exps</span> <span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">exps</span><span class="p">,</span> <span class="n">exp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">exps</span> <span class="o">=</span> <span class="n">exps</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="c1"># 5. Reshape to original image</span>
+        <span class="n">output_strided</span> <span class="o">=</span> <span class="n">exps</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">strided_window</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">quantum_filter</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">output_strided</span><span class="p">,</span> <span class="n">output_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                                   <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">))</span>
+        <span class="n">quantum_filter</span> <span class="o">=</span> <span class="n">quantum_filter</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1">#print(&#39;quantum_filter&#39;, quantum_filter.shape)</span>
+        <span class="k">return</span> <span class="n">quantum_filter</span>
+
+                
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_filter_torch_frqi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">U</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a quantum filter to a feature from the data samples with Flexible Representation of Quantum Images.</span>
+<span class="sd">        This function is only used with Pytorch backend.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): input data (one feature), shape (num_samples, N,N,N)</span>
+<span class="sd">            tol (float): tolerance for the masking matrix. All values from the</span>
+<span class="sd">            original data which are smaller than the tolerance are set to 0</span>
+<span class="sd">            U (tensor): Unitary matrix representing the random quantum circuit</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (tensor): quantum filter applied to data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">reshape_idxs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span>
+
+        <span class="c1"># Set parameters based on number of dimensions</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">einsum_equation</span> <span class="o">=</span> <span class="s1">&#39;ijkl-&gt;ijk&#39;</span>
+            <span class="n">permutation_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+            <span class="n">dz</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">einsum_equation</span> <span class="o">=</span> <span class="s1">&#39;ijklm-&gt;ijkl&#39;</span>
+            <span class="n">permutation_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+            <span class="n">dz</span> <span class="o">=</span> <span class="n">size</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
+
+        <span class="c1"># 0. Get rolling windows</span>
+        <span class="n">strided_window</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">roll_torch</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+            <span class="n">dx</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">strided_window</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">reshape_idxs</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># 1. Flexible representation of quantum images.</span>
+        <span class="c1"># Apply cos(theta)|0&gt; + sin(theta)|1&gt; transformation</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">sq</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">size</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">frqi</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">windows</span><span class="p">),</span> <span class="n">v1</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">windows</span><span class="p">),</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sq</span><span class="p">)</span>
+
+        <span class="c1"># 2. Flatten the last dimension to create an initial state</span>
+        <span class="n">flatten</span> <span class="o">=</span> <span class="n">frqi</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">))</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+        <span class="c1"># 3. Apply U rotation to each state</span>
+        <span class="n">apply_U</span> <span class="o">=</span> <span class="p">(</span><span class="n">U</span> <span class="o">@</span> <span class="n">flatten</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">reshape_idxs</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+
+        <span class="c1"># 4. Partial trace to remove the extra qubit</span>
+        <span class="n">partial_trace</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">einsum_equation</span><span class="p">,</span> <span class="n">apply_U</span><span class="p">)</span>
+
+        <span class="c1"># 5. Reshape back to window view</span>
+        <span class="n">partial_trace_reshaped</span> <span class="o">=</span> <span class="n">partial_trace</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span><span class="p">)</span>
+
+        <span class="c1"># 6. Reshape to original shape, taking into account transposition</span>
+        <span class="n">fin_shape</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">)</span>
+        <span class="n">new_reshape_idxs</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_samples</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="n">fin_shape</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">partial_trace_reshaped</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span>
+            <span class="n">permutation_idxs</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new_reshape_idxs</span><span class="p">)</span>
+
+        <span class="c1"># 7. Get the probability for each state (modulus of the final state)</span>
+        <span class="n">output_probability</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">*</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+
+        <span class="c1"># 8. Create a mask to map to zero all zero values of the original image</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">windows</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_windows</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">permutation_idxs</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new_reshape_idxs</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">quantum_filter</span> <span class="o">=</span> <span class="n">output_probability</span><span class="o">*</span><span class="n">mask</span>
+        <span class="k">return</span> <span class="n">quantum_filter</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">n_filt</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the quantum filters for all the features</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): input data (one feature), shape</span>
+<span class="sd">                (num_samples, num_features, N,N,N)</span>
+<span class="sd">            tol (float): tolerance for the masking matrix. All values from the</span>
+<span class="sd">                original data which are smaller than the tolerance are set to 0</span>
+<span class="sd">            n_filt (int): index of the number of filters</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (tensor): output quantum filter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Scale data</span>
+        <span class="n">data_scaled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Store number of samples</span>
+        <span class="n">fin_shape</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">)</span>  <span class="c1"># Final shape of the data</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;frqi&#39;</span><span class="p">:</span>
+                <span class="n">fun_filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_filter_torch_frqi</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;angle&#39;</span><span class="p">:</span>
+                <span class="n">fun_filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_filter_torch_angle</span>
+            
+            <span class="n">data_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],)</span> <span class="o">+</span>
+                <span class="p">(</span><span class="n">fin_shape</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># Run for every feature</span>
+                <span class="n">unitary_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">unitaries_list</span><span class="p">[</span><span class="n">n_filt</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">data_out</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fun_filter</span><span class="p">(</span>
+                        <span class="n">data_scaled</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">tol</span><span class="p">,</span> <span class="n">unitary_matrix</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">data_out</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fun_filter</span><span class="p">(</span>
+                        <span class="n">data_scaled</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">tol</span><span class="p">,</span> <span class="n">unitary_matrix</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],)</span> <span class="o">+</span>
+                <span class="p">(</span><span class="n">fin_shape</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">gates_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">J_list</span><span class="p">[</span><span class="n">n_filt</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;Ising&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_set_list</span><span class="p">[</span><span class="n">n_filt</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">qubits_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_list</span><span class="p">[</span><span class="n">n_filt</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_name</span><span class="o">==</span><span class="s1">&#39;Ising&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_set_list</span><span class="p">[</span><span class="n">n_filt</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">data_out</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_filter_qiskit</span><span class="p">(</span>
+                            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">,</span> <span class="n">tol</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="n">data_out</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_filter_qiskit</span><span class="p">(</span>
+                            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">gates_set</span><span class="p">,</span> <span class="n">qubits_set</span><span class="p">,</span> <span class="n">tol</span>
+                        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data_out</span>
+
+<div class="viewcode-block" id="QuantumFiltersBase.get_quantum_filters">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.get_quantum_filters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_quantum_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the quantum filters for all features multiple (num_filters) times</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): input data (one feature),</span>
+<span class="sd">                shape 2D (num_samples, num_features, N, N),</span>
+<span class="sd">                3D (num_samples, num_features, N, N, N)</span>
+<span class="sd">            tol (float): tolerance for the masking matrix. All values from the</span>
+<span class="sd">                original data which are smaller than the tolerance are set to 0</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (tensor/np.array): output quantum filters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">==</span><span class="s1">&#39;torch&#39;</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Incorrect data shape. The data should have shape&#39;</span>
+                <span class="s1">&#39; (num_samples, num_features,) + (N,) * number of dimensions&#39;</span><span class="p">)</span>
+        <span class="n">all_results</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">n_filt</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span><span class="p">)</span>  <span class="c1"># Run for each number of filters</span>
+        <span class="p">]</span>
+
+        <span class="n">result_shape</span> <span class="o">=</span> <span class="n">all_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">final_result_shape</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">result_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">result_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_filters</span><span class="p">,</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">result_shape</span><span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Reshape final array</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="n">results_reshaped</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">final_result_shape</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_results</span><span class="p">):</span>
+                <span class="n">results_reshaped</span><span class="p">[</span>
+                    <span class="p">:,</span>
+                    <span class="p">((</span><span class="n">result_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">i</span><span class="p">):(</span><span class="n">result_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="p">:,</span>
+                    <span class="p">:</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">all_results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_results</span><span class="p">)</span>
+            <span class="n">results_reshaped</span> <span class="o">=</span> <span class="n">all_results</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">final_result_shape</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results_reshaped</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="QuantumFilters2D">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuantumFilters2D</span><span class="p">(</span><span class="n">QuantumFiltersBase</span><span class="p">):</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Applies a quantum filter to a 2D image.  &quot;</span>
+    <span class="s2">&quot;Quantum data encoding: Flexible Representation of Quantum Images. &quot;</span>
+    <span class="s2">&quot;Quantum transformation: quantum reservoirs with fixed number of gates. &quot;</span>
+    <span class="s2">&quot;Implemented: G1 = {CNOT, H, X}, G2 = {CNOT, H, S}, and G3={CNOT,H,T} and &quot;</span>
+    <span class="s2">&quot;evolution under the transverse field Ising model. The code is designed to&quot;</span>
+    <span class="s2">&quot; run either in a Qiskit backend or with Pytorch.&quot;</span>
+    <span class="n">class_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;(n,n), n integer. Box size in which the data is split to &quot;</span>
+        <span class="s2">&quot;apply the quantum filter. The hilbert space is better exploit if we &quot;</span>
+        <span class="s2">&quot;set n^2=2^l.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stride&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Stride used to move across the image.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nqbits&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of qubits of the quantum circuits. nqbits = &quot;</span>
+        <span class="s2">&quot;[log2(n^2)] + 1. This parameter can not be chosen by the user.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_filters&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of quantum features applied to each of the &quot;</span>
+        <span class="s2">&quot;features of the data. If the input data has shape &quot;</span>
+        <span class="s2">&quot;(n_samples,num_features,N,N), the output data has shape &quot;</span>
+        <span class="s2">&quot;(n_samples, num_features*num_filters,N,N,N)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_samples&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of samples of the input data&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;Pytorch device (cpu, cuda). Only used if the backend is &quot;</span>
+        <span class="s2">&quot;torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_gates&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of quantum gates of the quantum reservoir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gates_set&quot;</span><span class="p">:</span> <span class="s2">&quot;List of quantum gates that form the quantum reservoir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;qubits_set&quot;</span><span class="p">:</span> <span class="s2">&quot;List of qubits to which the quantum gates are applied &quot;</span>
+        <span class="s2">&quot;to&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;unitaries_list&quot;</span><span class="p">:</span> <span class="s2">&quot;list of all the quantum unitaries that define the&quot;</span>
+        <span class="s2">&quot; quantum reservoirs. The list has shape (num_filters, num_features, &quot;</span>
+        <span class="s2">&quot;nqbits, nqbits). Only used if backend is torch.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shape_windows&quot;</span><span class="p">:</span> <span class="s2">&quot;shape of the sliding windows&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of shots per experiment (only Qiskit backends)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Backend where to run the code. Either Qiskit or torch&quot;</span>
+            <span class="p">}</span>
+    <span class="n">required_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;(n,n), n integer. Box size in which the data is split to &quot;</span>
+        <span class="s2">&quot;apply the quantum filter. The hilbert space is better exploit if we &quot;</span>
+        <span class="s2">&quot;set n^2=2^l.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stride&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Stride used to move across the image.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of shots per experiment (only Qiskit backends)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Backend where to run the code. Either Qiskit or torch&quot;</span>
+    <span class="p">}</span>
+    <span class="n">example_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;stride&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="mi">4096</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;aer_simulator&quot;</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">stride</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;frqi&#39;</span><span class="p">,</span>  <span class="n">shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span> <span class="n">backend</span> <span class="o">=</span> <span class="s1">&#39;torch&#39;</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="QuantumFilters3D">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuantumFilters3D</span><span class="p">(</span><span class="n">QuantumFiltersBase</span><span class="p">):</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Applies a quantum filter to a 3D volume.  &quot;</span>
+    <span class="s2">&quot;Quantum data encoding: Flexible Representation of Quantum Images. &quot;</span>
+    <span class="s2">&quot;Quantum transformation: quantum reservoirs with fixed number of gates. &quot;</span>
+    <span class="s2">&quot;Implemented: G1 = {CNOT, H, X}, G2 = {CNOT, H, S}, and G3={CNOT,H,T} and &quot;</span>
+    <span class="s2">&quot;evolution under the transverse field Ising model. The code is designed to&quot;</span>
+    <span class="s2">&quot; run either in a Qiskit backend or with Pytorch.&quot;</span>
+    <span class="n">class_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;(n,n,n), n integer. Box size in which the data is split to &quot;</span>
+        <span class="s2">&quot;apply the quantum filter. The hilbert space is better exploit if we &quot;</span>
+        <span class="s2">&quot;set n^3=2^l.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stride&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Stride used to move across the image.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nqbits&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of qubits of the quantum circuits. nqbits = &quot;</span>
+        <span class="s2">&quot;[log2(n^3)] + 1. This parameter can not be chosen by the user.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_filters&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of quantum features applied to each of the &quot;</span>
+        <span class="s2">&quot;features of the data. If the input data has shape &quot;</span>
+        <span class="s2">&quot;(n_samples,num_features,N,N,N), the output data has shape &quot;</span>
+        <span class="s2">&quot;(n_samples, num_features*num_filters,N,N,N)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_samples&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of samples of the input data&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;Pytorch device (cpu, cuda). Only used with torch backend&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_gates&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of quantum gates of the quantum reservoir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gates_set&quot;</span><span class="p">:</span> <span class="s2">&quot;List of quantum gates that form the quantum reservoir&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;qubits_set&quot;</span><span class="p">:</span> <span class="s2">&quot;List of qubits to which the quantum gates are applied&quot;</span>
+        <span class="s2">&quot; to&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;unitaries_list&quot;</span><span class="p">:</span> <span class="s2">&quot;list of all the quantum unitaries that define the &quot;</span>
+        <span class="s2">&quot;quantum reservoirs. The list has shape (num_filters, num_features, &quot;</span>
+        <span class="s2">&quot;nqbits, nqbits). Only used if backend is torch.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shape_windows&quot;</span><span class="p">:</span> <span class="s2">&quot;shape of the sliding windows&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of shots per experiment (only Qiskit backends)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Backend where to run the code. Either Qiskit or torch&quot;</span>
+            <span class="p">}</span>
+    <span class="n">required_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;(n,n,n), n integer. Box size in which the data is split to&quot;</span>
+        <span class="s2">&quot; apply the quantum filter. The hilbert space is better exploit &quot;</span>
+        <span class="s2">&quot; if we set n^3=2^l.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stride&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Stride used to move across the image.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of shots per experiment (only Qiskit backends)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Backend where to run the code. Either Qiskit or torch&quot;</span>
+    <span class="p">}</span>
+    <span class="n">example_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;stride&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="mi">4096</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;aer_simulator&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">stride</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;frqi&#39;</span><span class="p">,</span> <span class="n">shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span> <span class="n">backend</span> <span class="o">=</span> <span class="s1">&#39;torch&#39;</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.qubo package &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">ingenii_quantum.qubo package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ingenii_quantum.qubo.graph">ingenii_quantum.qubo.graph module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.apply_similarity"><code class="docutils literal notranslate"><span class="pre">apply_similarity()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.canberra_distance"><code class="docutils literal notranslate"><span class="pre">canberra_distance()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.chebyshev_distance"><code class="docutils literal notranslate"><span class="pre">chebyshev_distance()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.create_graph"><code class="docutils literal notranslate"><span class="pre">create_graph()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.euclidean_distance"><code class="docutils literal notranslate"><span class="pre">euclidean_distance()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.gaussian_similarity"><code class="docutils literal notranslate"><span class="pre">gaussian_similarity()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.image_to_grid_graph"><code class="docutils literal notranslate"><span class="pre">image_to_grid_graph()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.jensen_shannon_divergence"><code class="docutils literal notranslate"><span class="pre">jensen_shannon_divergence()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.graph.minkowski_distance"><code class="docutils literal notranslate"><span class="pre">minkowski_distance()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.qubo.segmentation">ingenii_quantum.qubo.segmentation module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.segmentation.QUBO_formulation"><code class="docutils literal notranslate"><span class="pre">QUBO_formulation()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.segmentation.decode_binary_string"><code class="docutils literal notranslate"><span class="pre">decode_binary_string()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.qubo.segmentation.gurobi_qubo_solver"><code class="docutils literal notranslate"><span class="pre">gurobi_qubo_solver()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.qubo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.qubo package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ingenii_quantum.qubo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ingenii-quantum-qubo-package">
+<h1>ingenii_quantum.qubo package<a class="headerlink" href="#ingenii-quantum-qubo-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-ingenii_quantum.qubo.graph">
+<span id="ingenii-quantum-qubo-graph-module"></span><h2>ingenii_quantum.qubo.graph module<a class="headerlink" href="#module-ingenii_quantum.qubo.graph" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.apply_similarity">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">apply_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#apply_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.apply_similarity" title="Link to this definition"></a></dt>
+<dd><p>Apply chosen similarity to image.
+:param type: Similarity type name
+:type type: str
+:param image: input image
+:type image: np.array
+:param x1: x coordinates pixel 1
+:type x1: int
+:param y1: y coordinates pixel 1
+:type y1: int
+:param x2: x coordinates pixel 2
+:type x2: int
+:param y2: y coordinates pixel 2
+:type y2: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Edge weight</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>weight (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.canberra_distance">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">canberra_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#canberra_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.canberra_distance" title="Link to this definition"></a></dt>
+<dd><p>Canberra distance.
+:param p1: pixel value 1
+:type p1: float
+:param p2: pixel value 2
+:type p2: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Canberra distance between p1 and p2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.chebyshev_distance">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">chebyshev_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#chebyshev_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.chebyshev_distance" title="Link to this definition"></a></dt>
+<dd><p>Chebyshev distance.
+:param p1: pixel value 1
+:type p1: float
+:param p2: pixel value 2
+:type p2: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Chebyshev distance between p1 and p2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.create_graph">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">create_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_small</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Gaussian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd_prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#create_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.create_graph" title="Link to this definition"></a></dt>
+<dd><p>Function to create the Graph encoding the image, where the edges are calculated using the Gaussian similarity between pixels.
+Here we perform hyperparameter optimization for the stadard deviation, ensuring that  the proportion of the two tails of the weights distribution is around 0.17.</p>
+<blockquote>
+<div><p>data_small (np.array): input data
+type (str): Similarity type name</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.euclidean_distance">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">euclidean_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#euclidean_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.euclidean_distance" title="Link to this definition"></a></dt>
+<dd><p>Euclidean distance.
+:param p1: pixel value 1
+:type p1: float
+:param p2: pixel value 2
+:type p2: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Euclidean distance between p1 and p2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.gaussian_similarity">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">gaussian_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#gaussian_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.gaussian_similarity" title="Link to this definition"></a></dt>
+<dd><p>Gaussian similarity.
+:param p1: pixel value 1
+:type p1: float
+:param p2: pixel value 2
+:type p2: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gaussian similarity between p1 and p2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.image_to_grid_graph">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">image_to_grid_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gray_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Gaussian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#image_to_grid_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.image_to_grid_graph" title="Link to this definition"></a></dt>
+<dd><p>Convert a grayscale image to a grid graph with Gaussian similarity as edge weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gray_img</strong> (<em>numpy.ndarray</em>) – Grayscale image.</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – Similarity type name</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – Parameter for Gaussian similarity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of edges with weights for the graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.jensen_shannon_divergence">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">jensen_shannon_divergence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#jensen_shannon_divergence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.jensen_shannon_divergence" title="Link to this definition"></a></dt>
+<dd><p>Jensen-Shannon Divergence.
+:param p1: pixel value 1
+:type p1: float
+:param p2: pixel value 2
+:type p2: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Jensen-Shannon Divergence between p1 and p2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.graph.minkowski_distance">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.graph.</span></span><span class="sig-name descname"><span class="pre">minkowski_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/graph.html#minkowski_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.graph.minkowski_distance" title="Link to this definition"></a></dt>
+<dd><p>Minkowski distance.
+:param p1: pixel value 1
+:type p1: float
+:param p2: pixel value 2
+:type p2: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Minkowski distance between p1 and p2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.qubo.segmentation">
+<span id="ingenii-quantum-qubo-segmentation-module"></span><h2>ingenii_quantum.qubo.segmentation module<a class="headerlink" href="#module-ingenii_quantum.qubo.segmentation" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.segmentation.QUBO_formulation">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.segmentation.</span></span><span class="sig-name descname"><span class="pre">QUBO_formulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/segmentation.html#QUBO_formulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.segmentation.QUBO_formulation" title="Link to this definition"></a></dt>
+<dd><p>Function that provides the QUBO formulation for quantum and simulated annealing. It provides the linear and quadratic constraints.
+:param G: Weighted graph encoding the input image
+:type G: networkx.Graph
+:param alpha: hyperparameter controlling the importance of the smoothness constraint.
+:type alpha: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>linear constraints of QUBO model
+quadratic (dict): quadratic constraints of QUBO model
+problem_formulation_time (float): Problem formulation time</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>linear (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.segmentation.decode_binary_string">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.segmentation.</span></span><span class="sig-name descname"><span class="pre">decode_binary_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/segmentation.html#decode_binary_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.segmentation.decode_binary_string" title="Link to this definition"></a></dt>
+<dd><p>Decode a binary string into a binary segmentation mask.
+:param x: Binary string representing the segmentation.
+:type x: list
+:param height: Height of the image.
+:type height: int
+:param width: Width of the image.
+:type width: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Segmentation mask.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.qubo.segmentation.gurobi_qubo_solver">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.qubo.segmentation.</span></span><span class="sig-name descname"><span class="pre">gurobi_qubo_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/qubo/segmentation.html#gurobi_qubo_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.qubo.segmentation.gurobi_qubo_solver" title="Link to this definition"></a></dt>
+<dd><p>Gurobi solver.
+Args</p>
+<blockquote>
+<div><p>G (networkx.Graph): Weighted graph encoding the input image
+alpha (float): hyperparameter controlling the importance of the smoothness constraint.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Segmentation mask
+gurobi_qubo_value (float): QUBO value of segmentation mask</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>segmentation_mask (np.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.qubo">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingenii_quantum.qubo" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

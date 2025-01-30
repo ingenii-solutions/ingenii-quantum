@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.hybrid_networks.statistics &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.hybrid_networks.statistics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ingenii_quantum.hybrid_networks.statistics</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pennylane</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pennylane.math</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial_trace</span><span class="p">,</span> <span class="n">reduce_statevector</span><span class="p">,</span> <span class="n">fidelity_statevector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">kl_div</span>
+
+
+<div class="viewcode-block" id="EntanglingCapacity">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EntanglingCapacity</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">params_shape</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the EntanglingCapacity class with the given circuit, device, and parameter shape.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            circuit: the QNode representing the quantum circuit</span>
+<span class="sd">            dev: quantum device used for simulation</span>
+<span class="sd">            params_shape: shape of the parameters for the circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">circuit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_shape</span> <span class="o">=</span> <span class="n">params_shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">wires</span><span class="p">)</span>  <span class="c1"># Number of qubits</span>
+
+<div class="viewcode-block" id="EntanglingCapacity.generate_random_params">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.generate_random_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_random_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates random parameters for the quantum circuit based on the specified parameter shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_shape</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EntanglingCapacity.meyer_wallach_entanglement">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.meyer_wallach_entanglement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meyer_wallach_entanglement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the Meyer-Wallach entanglement measure for the quantum circuit.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            n_samples (int): Number of samples to calculate the entanglement measure</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Meyer-Wallach entanglement measure averaged over multiple samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_random_params</span><span class="p">()</span>  <span class="c1"># Random parameters for the PQC</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>  <span class="c1"># Get quantum state from the PQC</span>
+
+            <span class="c1"># Reduce the full state vector to density matrix for the entire system</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">reduce_statevector</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">wires</span><span class="p">)</span>
+
+            <span class="n">entropy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_entropy</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span>
+
+            <span class="c1"># Meyer-Wallach measure for the current state</span>
+            <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">entropy</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="c1"># Average over the samples and return</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_entropy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to calculate the average entropy over all qubits.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            rho: the reduced state of the quantum system (density matrix).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Entropy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entropy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">qb_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">))</span>
+
+        <span class="c1"># Loop over each qubit, calculate the partial trace and its entropy</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
+            <span class="c1"># Partial trace over all qubits except the j-th qubit</span>
+            <span class="n">dens</span> <span class="o">=</span> <span class="n">partial_trace</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">qb_indices</span><span class="p">[:</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">qb_indices</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">dens</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Calculate the purity (trace of the square of density matrix)</span>
+            <span class="n">entropy</span> <span class="o">+=</span> <span class="n">trace</span>
+
+        <span class="k">return</span> <span class="n">entropy</span></div>
+
+
+<div class="viewcode-block" id="Expressibility">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Expressibility</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pqc</span><span class="p">,</span> <span class="n">params_shape</span><span class="p">,</span> <span class="n">dev</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Expressibility class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pqc (qml.QNode): Parameterized quantum circuit.</span>
+<span class="sd">            params_shape (tuple): Shape of the parameters used in the PQC.</span>
+<span class="sd">            dev (qml.Device): Pennylane device for executing the PQC.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pqc</span> <span class="o">=</span> <span class="n">pqc</span>       
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_shape</span> <span class="o">=</span> <span class="n">params_shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span>
+
+<div class="viewcode-block" id="Expressibility.generate_random_params">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.generate_random_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_random_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params_shape</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate random parameters for the parameterized quantum circuit.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            params_shape (tuple): Shape of the parameters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Randomly generated parameters in the range [0, 2π].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">params_shape</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Expressibility.pqc_fidelity">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.pqc_fidelity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pqc_fidelity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the fidelity between quantum states produced by the PQC.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_samples (int): Number of samples for fidelity computation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of fidelity values for the sampled states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fidelities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+            <span class="c1"># Get random parameters for PQC1 and PQC2</span>
+            <span class="n">params1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_random_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params_shape</span><span class="p">)</span>
+            <span class="n">params2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_random_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params_shape</span><span class="p">)</span>
+            <span class="n">state1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pqc</span><span class="p">(</span><span class="n">params1</span><span class="p">)</span>
+            <span class="n">state2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pqc</span><span class="p">(</span><span class="n">params2</span><span class="p">)</span>
+            <span class="c1"># Calculate fidelity between the two states</span>
+            <span class="n">fidelities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fidelity_statevector</span><span class="p">(</span><span class="n">state1</span><span class="p">,</span> <span class="n">state2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fidelities</span></div>
+
+
+<div class="viewcode-block" id="Expressibility.haar_fidelity">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.haar_fidelity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">haar_fidelity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate fidelities for Haar-random states.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_samples (int): Number of samples for fidelity computation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Array of Haar-random fidelities.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">wires</span><span class="p">)</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">n_qubits</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">F</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Expressibility.compute_expressibility">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.compute_expressibility">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_expressibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the expressibility of the PQC by comparing its fidelity distribution</span>
+<span class="sd">        to that of Haar-random states using KL divergence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_samples (int): Number of samples for the computation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Expressibility value, computed as the mean KL divergence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pqc_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pqc_fidelity</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="n">haar_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">haar_fidelity</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">kl_div</span><span class="p">(</span><span class="n">pqc_f</span><span class="p">,</span> <span class="n">haar_f</span><span class="p">)))</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

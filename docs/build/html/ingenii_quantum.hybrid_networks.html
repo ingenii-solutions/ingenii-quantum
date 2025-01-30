@@ -1,0 +1,1035 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.hybrid_networks package &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">ingenii_quantum.hybrid_networks package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks.edge_detection">ingenii_quantum.hybrid_networks.edge_detection module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.class_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.class_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.description"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.description</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.example_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.example_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.optional_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.optional_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.required_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.required_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.run"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.run()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.class_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.class_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.description"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.description</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.example_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.example_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.optional_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.optional_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.required_parameters"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.required_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.run"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.run()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_box"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.run_box()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_qiskit"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.run_image_qiskit()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_torch"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.run_image_torch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks.filters">ingenii_quantum.hybrid_networks.filters module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.class_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.class_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.description"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.description</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.example_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.example_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.optional_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.optional_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.required_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.required_parameters</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.class_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.class_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.description"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.description</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.example_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.example_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.optional_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.optional_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.required_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.required_parameters</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.gate_names"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.gate_names</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_qc"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.generate_qc()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_reservoirs"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.generate_reservoirs()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_unitaries"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.generate_unitaries()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.get_quantum_filters"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.get_quantum_filters()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_gates"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.load_gates()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_reservoirs"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.load_reservoirs()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_unitaries"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.load_unitaries()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks.layers">ingenii_quantum.hybrid_networks.layers module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.apply_ansatz"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.apply_ansatz()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.class_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.class_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.create_layer"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.create_layer()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.description"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.description</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.example_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.example_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.get_shapes"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.get_shapes()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.optional_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.optional_parameters</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.qnn_layer()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer_QAOA"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.qnn_layer_QAOA()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.required_parameters"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.required_parameters</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks.qinsp_filter">ingenii_quantum.hybrid_networks.qinsp_filter module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.check_convergence"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.check_convergence()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.process"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.process()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.select_image"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.select_image()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.sum_neighbours"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.sum_neighbours()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.transformation"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.transformation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks.statistics">ingenii_quantum.hybrid_networks.statistics module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity"><code class="docutils literal notranslate"><span class="pre">EntanglingCapacity</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.generate_random_params"><code class="docutils literal notranslate"><span class="pre">EntanglingCapacity.generate_random_params()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.meyer_wallach_entanglement"><code class="docutils literal notranslate"><span class="pre">EntanglingCapacity.meyer_wallach_entanglement()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility"><code class="docutils literal notranslate"><span class="pre">Expressibility</span></code></a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.compute_expressibility"><code class="docutils literal notranslate"><span class="pre">Expressibility.compute_expressibility()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.generate_random_params"><code class="docutils literal notranslate"><span class="pre">Expressibility.generate_random_params()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.haar_fidelity"><code class="docutils literal notranslate"><span class="pre">Expressibility.haar_fidelity()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.pqc_fidelity"><code class="docutils literal notranslate"><span class="pre">Expressibility.pqc_fidelity()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks.utils">ingenii_quantum.hybrid_networks.utils module</a><ul>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.utils.roll_numpy"><code class="docutils literal notranslate"><span class="pre">roll_numpy()</span></code></a></li>
+<li><a class="reference internal" href="#ingenii_quantum.hybrid_networks.utils.roll_torch"><code class="docutils literal notranslate"><span class="pre">roll_torch()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ingenii_quantum.hybrid_networks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.hybrid_networks package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ingenii_quantum.hybrid_networks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ingenii-quantum-hybrid-networks-package">
+<h1>ingenii_quantum.hybrid_networks package<a class="headerlink" href="#ingenii-quantum-hybrid-networks-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-ingenii_quantum.hybrid_networks.edge_detection">
+<span id="ingenii-quantum-hybrid-networks-edge-detection-module"></span><h2>ingenii_quantum.hybrid_networks.edge_detection module<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks.edge_detection" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.edge_detection.</span></span><span class="sig-name descname"><span class="pre">EdgeDetector2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'aer_simulator'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetector2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase" title="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeDetectorBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.class_parameters">
+<span class="sig-name descname"><span class="pre">class_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'D2n':</span> <span class="pre">'Decrement</span> <span class="pre">gate',</span> <span class="pre">'H_large':</span> <span class="pre">'Id</span> <span class="pre">\tensordot</span> <span class="pre">H',</span> <span class="pre">'anc_qb':</span> <span class="pre">'</span> <span class="pre">(int)</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">ancilla</span> <span class="pre">qubits',</span> <span class="pre">'backend':</span> <span class="pre">'Qiskit</span> <span class="pre">backend</span> <span class="pre">(simulation</span> <span class="pre">or</span> <span class="pre">real)</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'device':</span> <span class="pre">'Pytorch</span> <span class="pre">device</span> <span class="pre">(cpu,</span> <span class="pre">cuda)',</span> <span class="pre">'shots':</span> <span class="pre">'(int)</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">experiments,</span> <span class="pre">only</span> <span class="pre">for</span> <span class="pre">qiskit</span> <span class="pre">backend',</span> <span class="pre">'size':</span> <span class="pre">'(int)</span> <span class="pre">size</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">(nxn)</span> <span class="pre">blocks</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">image</span> <span class="pre">is</span> <span class="pre">partitioned',</span> <span class="pre">'total_qb':</span> <span class="pre">'(int)</span> <span class="pre">Total</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">qubits'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.class_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Quantum</span> <span class="pre">Hadamard</span> <span class="pre">Edge</span> <span class="pre">Detection</span> <span class="pre">algorithm</span> <span class="pre">for</span> <span class="pre">2D</span> <span class="pre">images.</span> <span class="pre">'</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.description" title="Link to this definition"></a></dt>
+<dd><p>Implemented both with Qiskit to be run on real hardware, and on pytorch</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.example_parameters">
+<span class="sig-name descname"><span class="pre">example_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'torch',</span> <span class="pre">'shots':</span> <span class="pre">512,</span> <span class="pre">'size':</span> <span class="pre">16}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.example_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.optional_parameters">
+<span class="sig-name descname"><span class="pre">optional_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'Qiskit</span> <span class="pre">backend</span> <span class="pre">(simulation</span> <span class="pre">or</span> <span class="pre">real)</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'shots':</span> <span class="pre">'(int)</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">experiments,</span> <span class="pre">only</span> <span class="pre">for</span> <span class="pre">qiskit</span> <span class="pre">backend'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.optional_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.required_parameters">
+<span class="sig-name descname"><span class="pre">required_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'size':</span> <span class="pre">'(int)</span> <span class="pre">size</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">(nxn)</span> <span class="pre">blocks</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">image</span> <span class="pre">is</span> <span class="pre">partitioned'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.required_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetector2D.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the edge detection algorithm with either Pytorch or Qiskit code
+:param data: input data
+:type data: tensor/np.array
+:param tol: Tolerance to be considered and edge
+:type tol: tensor/np.array
+:param reduce: reduce the dimension by half at the end
+:type reduce: bool
+:param verbose: If true, tqdm is used to show the evolution.
+:type verbose: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Edge-detected image</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array/tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.edge_detection.</span></span><span class="sig-name descname"><span class="pre">EdgeDetector3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'aer_simulator'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetector3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase" title="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeDetectorBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.class_parameters">
+<span class="sig-name descname"><span class="pre">class_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'D2n':</span> <span class="pre">'Decrement</span> <span class="pre">gate',</span> <span class="pre">'H_large':</span> <span class="pre">'Id</span> <span class="pre">\tensordot</span> <span class="pre">H',</span> <span class="pre">'anc_qb':</span> <span class="pre">'</span> <span class="pre">(int)</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">ancilla</span> <span class="pre">qubits',</span> <span class="pre">'backend':</span> <span class="pre">'Qiskit</span> <span class="pre">backend</span> <span class="pre">(simulation</span> <span class="pre">or</span> <span class="pre">real)</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'device':</span> <span class="pre">'Pytorch</span> <span class="pre">device</span> <span class="pre">(cpu,</span> <span class="pre">cuda)',</span> <span class="pre">'shots':</span> <span class="pre">'(int)</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">experiments,</span> <span class="pre">only</span> <span class="pre">for</span> <span class="pre">qiskit</span> <span class="pre">backend',</span> <span class="pre">'size':</span> <span class="pre">'(int)</span> <span class="pre">size</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">(nxn)</span> <span class="pre">blocks</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">image</span> <span class="pre">is</span> <span class="pre">partitioned',</span> <span class="pre">'total_qb':</span> <span class="pre">'(int)</span> <span class="pre">Total</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">qubits'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.class_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Quantum</span> <span class="pre">Hadamard</span> <span class="pre">Edge</span> <span class="pre">Detection</span> <span class="pre">algorithm</span> <span class="pre">for</span> <span class="pre">3D</span> <span class="pre">volumes.</span> <span class="pre">'</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.description" title="Link to this definition"></a></dt>
+<dd><p>Implemented both with Qiskit to be run on real hardware, and on pytorch</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.example_parameters">
+<span class="sig-name descname"><span class="pre">example_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'torch',</span> <span class="pre">'shots':</span> <span class="pre">512,</span> <span class="pre">'size':</span> <span class="pre">16}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.example_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.optional_parameters">
+<span class="sig-name descname"><span class="pre">optional_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'Qiskit</span> <span class="pre">backend</span> <span class="pre">(simulation</span> <span class="pre">or</span> <span class="pre">real)</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'shots':</span> <span class="pre">'(int)</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">experiments,</span> <span class="pre">only</span> <span class="pre">for</span> <span class="pre">qiskit</span> <span class="pre">backend'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.optional_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.required_parameters">
+<span class="sig-name descname"><span class="pre">required_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'size':</span> <span class="pre">'(int)</span> <span class="pre">size</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">(nxn)</span> <span class="pre">blocks</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">image</span> <span class="pre">is</span> <span class="pre">partitioned'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.required_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetector3D.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.run" title="Link to this definition"></a></dt>
+<dd><p>Run edge detection for different rotations of the image.
+:param data: input data (samples, features, dim,dim,dim)
+:type data: np.array
+:param num_filters: Number of rotations (permutations of the last 3
+:type num_filters: int
+:param dimension) to output:
+:param tol: Tolerance to consider an edge
+:type tol: float
+:param reduce: reduce the size of the image at the end
+:type reduce: bool
+:param verbose: If true, tqdm is used to show the evolution.
+:type verbose: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Edge-detected image</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array/tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.edge_detection.</span></span><span class="sig-name descname"><span class="pre">EdgeDetectorBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetectorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_box">
+<span class="sig-name descname"><span class="pre">run_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetectorBase.run_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_box" title="Link to this definition"></a></dt>
+<dd><p>Run the edge detection algorithm for every box of the image
+(For Qiskit version)
+:param box: input data
+:type box: np.array
+:param tol: Tolerance to be considered and edge
+:type tol: np.array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Edge-detected box</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_qiskit">
+<span class="sig-name descname"><span class="pre">run_image_qiskit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetectorBase.run_image_qiskit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_qiskit" title="Link to this definition"></a></dt>
+<dd><p>Run edge detection for the whole image (Qiskit version)
+:param data: input data
+:type data: np.array
+:param tol: Tolerance to be considered an edge
+:type tol: np.array
+:param reduce: Whether to reduce the dimension by half at the end
+:type reduce: bool
+:param of the algorithm:
+:param verbose: If true, tqdm is used to show the evolution.
+:type verbose: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Edge-detected image</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_torch">
+<span class="sig-name descname"><span class="pre">run_image_torch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/edge_detection.html#EdgeDetectorBase.run_image_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_torch" title="Link to this definition"></a></dt>
+<dd><p>Run edge detection for the whole images (Pytorch)
+:param data: input data
+:type data: tensor
+:param tol: Tolerance to be considered and edge
+:type tol: tensor
+:param reduce: reduce the dimension by half at the end of the
+:type reduce: bool
+:param algorithm:
+:param verbose: If true, tqdm is used to show the evolution.
+:type verbose: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Edge-detected image</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.hybrid_networks.filters">
+<span id="ingenii-quantum-hybrid-networks-filters-module"></span><h2>ingenii_quantum.hybrid_networks.filters module<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks.filters" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.filters.</span></span><span class="sig-name descname"><span class="pre">QuantumFilters2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'frqi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4096</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'torch'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFilters2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase" title="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantumFiltersBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.class_parameters">
+<span class="sig-name descname"><span class="pre">class_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'Backend</span> <span class="pre">where</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">the</span> <span class="pre">code.</span> <span class="pre">Either</span> <span class="pre">Qiskit</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'device':</span> <span class="pre">'Pytorch</span> <span class="pre">device</span> <span class="pre">(cpu,</span> <span class="pre">cuda).</span> <span class="pre">Only</span> <span class="pre">used</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">backend</span> <span class="pre">is</span> <span class="pre">torch',</span> <span class="pre">'gates_set':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">quantum</span> <span class="pre">gates</span> <span class="pre">that</span> <span class="pre">form</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">reservoir',</span> <span class="pre">'nqbits':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">qubits</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">circuits.</span> <span class="pre">nqbits</span> <span class="pre">=</span> <span class="pre">[log2(n^2)]</span> <span class="pre">+</span> <span class="pre">1.</span> <span class="pre">This</span> <span class="pre">parameter</span> <span class="pre">can</span> <span class="pre">not</span> <span class="pre">be</span> <span class="pre">chosen</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">user.',</span> <span class="pre">'num_filters':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">quantum</span> <span class="pre">features</span> <span class="pre">applied</span> <span class="pre">to</span> <span class="pre">each</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">features</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">data.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">data</span> <span class="pre">has</span> <span class="pre">shape</span> <span class="pre">(n_samples,num_features,N,N),</span> <span class="pre">the</span> <span class="pre">output</span> <span class="pre">data</span> <span class="pre">has</span> <span class="pre">shape</span> <span class="pre">(n_samples,</span> <span class="pre">num_features*num_filters,N,N,N)',</span> <span class="pre">'num_gates':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">quantum</span> <span class="pre">gates</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">reservoir',</span> <span class="pre">'num_samples':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">samples</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">data',</span> <span class="pre">'qubits_set':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">qubits</span> <span class="pre">to</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">gates</span> <span class="pre">are</span> <span class="pre">applied</span> <span class="pre">to',</span> <span class="pre">'shape':</span> <span class="pre">'(n,n),</span> <span class="pre">n</span> <span class="pre">integer.</span> <span class="pre">Box</span> <span class="pre">size</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">is</span> <span class="pre">split</span> <span class="pre">to</span> <span class="pre">apply</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">filter.</span> <span class="pre">The</span> <span class="pre">hilbert</span> <span class="pre">space</span> <span class="pre">is</span> <span class="pre">better</span> <span class="pre">exploit</span> <span class="pre">if</span> <span class="pre">we</span> <span class="pre">set</span> <span class="pre">n^2=2^l.',</span> <span class="pre">'shape_windows':</span> <span class="pre">'shape</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">sliding</span> <span class="pre">windows',</span> <span class="pre">'shots':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">per</span> <span class="pre">experiment</span> <span class="pre">(only</span> <span class="pre">Qiskit</span> <span class="pre">backends)',</span> <span class="pre">'stride':</span> <span class="pre">'int.</span> <span class="pre">Stride</span> <span class="pre">used</span> <span class="pre">to</span> <span class="pre">move</span> <span class="pre">across</span> <span class="pre">the</span> <span class="pre">image.',</span> <span class="pre">'unitaries_list':</span> <span class="pre">'list</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">unitaries</span> <span class="pre">that</span> <span class="pre">define</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">reservoirs.</span> <span class="pre">The</span> <span class="pre">list</span> <span class="pre">has</span> <span class="pre">shape</span> <span class="pre">(num_filters,</span> <span class="pre">num_features,</span> <span class="pre">nqbits,</span> <span class="pre">nqbits).</span> <span class="pre">Only</span> <span class="pre">used</span> <span class="pre">if</span> <span class="pre">backend</span> <span class="pre">is</span> <span class="pre">torch.'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.class_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Applies</span> <span class="pre">a</span> <span class="pre">quantum</span> <span class="pre">filter</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">2D</span> <span class="pre">image.</span>&#160; <span class="pre">'</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.description" title="Link to this definition"></a></dt>
+<dd><p>Flexible Representation of Quantum Images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantum data encoding</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.example_parameters">
+<span class="sig-name descname"><span class="pre">example_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'aer_simulator',</span> <span class="pre">'shape':</span> <span class="pre">(2,</span> <span class="pre">2),</span> <span class="pre">'shots':</span> <span class="pre">4096,</span> <span class="pre">'stride':</span> <span class="pre">2}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.example_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.optional_parameters">
+<span class="sig-name descname"><span class="pre">optional_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'Backend</span> <span class="pre">where</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">the</span> <span class="pre">code.</span> <span class="pre">Either</span> <span class="pre">Qiskit</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'shape':</span> <span class="pre">'(n,n),</span> <span class="pre">n</span> <span class="pre">integer.</span> <span class="pre">Box</span> <span class="pre">size</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">is</span> <span class="pre">split</span> <span class="pre">to</span> <span class="pre">apply</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">filter.</span> <span class="pre">The</span> <span class="pre">hilbert</span> <span class="pre">space</span> <span class="pre">is</span> <span class="pre">better</span> <span class="pre">exploit</span> <span class="pre">if</span> <span class="pre">we</span> <span class="pre">set</span> <span class="pre">n^2=2^l.',</span> <span class="pre">'shots':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">per</span> <span class="pre">experiment</span> <span class="pre">(only</span> <span class="pre">Qiskit</span> <span class="pre">backends)',</span> <span class="pre">'stride':</span> <span class="pre">'int.</span> <span class="pre">Stride</span> <span class="pre">used</span> <span class="pre">to</span> <span class="pre">move</span> <span class="pre">across</span> <span class="pre">the</span> <span class="pre">image.'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.optional_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.required_parameters">
+<span class="sig-name descname"><span class="pre">required_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.required_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters3D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.filters.</span></span><span class="sig-name descname"><span class="pre">QuantumFilters3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'frqi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4096</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'torch'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFilters3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase" title="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantumFiltersBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.class_parameters">
+<span class="sig-name descname"><span class="pre">class_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'Backend</span> <span class="pre">where</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">the</span> <span class="pre">code.</span> <span class="pre">Either</span> <span class="pre">Qiskit</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'device':</span> <span class="pre">'Pytorch</span> <span class="pre">device</span> <span class="pre">(cpu,</span> <span class="pre">cuda).</span> <span class="pre">Only</span> <span class="pre">used</span> <span class="pre">with</span> <span class="pre">torch</span> <span class="pre">backend',</span> <span class="pre">'gates_set':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">quantum</span> <span class="pre">gates</span> <span class="pre">that</span> <span class="pre">form</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">reservoir',</span> <span class="pre">'nqbits':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">qubits</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">circuits.</span> <span class="pre">nqbits</span> <span class="pre">=</span> <span class="pre">[log2(n^3)]</span> <span class="pre">+</span> <span class="pre">1.</span> <span class="pre">This</span> <span class="pre">parameter</span> <span class="pre">can</span> <span class="pre">not</span> <span class="pre">be</span> <span class="pre">chosen</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">user.',</span> <span class="pre">'num_filters':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">quantum</span> <span class="pre">features</span> <span class="pre">applied</span> <span class="pre">to</span> <span class="pre">each</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">features</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">data.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">data</span> <span class="pre">has</span> <span class="pre">shape</span> <span class="pre">(n_samples,num_features,N,N,N),</span> <span class="pre">the</span> <span class="pre">output</span> <span class="pre">data</span> <span class="pre">has</span> <span class="pre">shape</span> <span class="pre">(n_samples,</span> <span class="pre">num_features*num_filters,N,N,N)',</span> <span class="pre">'num_gates':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">quantum</span> <span class="pre">gates</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">reservoir',</span> <span class="pre">'num_samples':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">samples</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">data',</span> <span class="pre">'qubits_set':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">qubits</span> <span class="pre">to</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">gates</span> <span class="pre">are</span> <span class="pre">applied</span> <span class="pre">to',</span> <span class="pre">'shape':</span> <span class="pre">'(n,n,n),</span> <span class="pre">n</span> <span class="pre">integer.</span> <span class="pre">Box</span> <span class="pre">size</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">is</span> <span class="pre">split</span> <span class="pre">to</span> <span class="pre">apply</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">filter.</span> <span class="pre">The</span> <span class="pre">hilbert</span> <span class="pre">space</span> <span class="pre">is</span> <span class="pre">better</span> <span class="pre">exploit</span> <span class="pre">if</span> <span class="pre">we</span> <span class="pre">set</span> <span class="pre">n^3=2^l.',</span> <span class="pre">'shape_windows':</span> <span class="pre">'shape</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">sliding</span> <span class="pre">windows',</span> <span class="pre">'shots':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">per</span> <span class="pre">experiment</span> <span class="pre">(only</span> <span class="pre">Qiskit</span> <span class="pre">backends)',</span> <span class="pre">'stride':</span> <span class="pre">'int.</span> <span class="pre">Stride</span> <span class="pre">used</span> <span class="pre">to</span> <span class="pre">move</span> <span class="pre">across</span> <span class="pre">the</span> <span class="pre">image.',</span> <span class="pre">'unitaries_list':</span> <span class="pre">'list</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">unitaries</span> <span class="pre">that</span> <span class="pre">define</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">reservoirs.</span> <span class="pre">The</span> <span class="pre">list</span> <span class="pre">has</span> <span class="pre">shape</span> <span class="pre">(num_filters,</span> <span class="pre">num_features,</span> <span class="pre">nqbits,</span> <span class="pre">nqbits).</span> <span class="pre">Only</span> <span class="pre">used</span> <span class="pre">if</span> <span class="pre">backend</span> <span class="pre">is</span> <span class="pre">torch.'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.class_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Applies</span> <span class="pre">a</span> <span class="pre">quantum</span> <span class="pre">filter</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">3D</span> <span class="pre">volume.</span>&#160; <span class="pre">'</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.description" title="Link to this definition"></a></dt>
+<dd><p>Flexible Representation of Quantum Images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantum data encoding</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.example_parameters">
+<span class="sig-name descname"><span class="pre">example_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'aer_simulator',</span> <span class="pre">'shape':</span> <span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">2),</span> <span class="pre">'shots':</span> <span class="pre">4096,</span> <span class="pre">'stride':</span> <span class="pre">2}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.example_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.optional_parameters">
+<span class="sig-name descname"><span class="pre">optional_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'Backend</span> <span class="pre">where</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">the</span> <span class="pre">code.</span> <span class="pre">Either</span> <span class="pre">Qiskit</span> <span class="pre">or</span> <span class="pre">torch',</span> <span class="pre">'shape':</span> <span class="pre">'(n,n,n),</span> <span class="pre">n</span> <span class="pre">integer.</span> <span class="pre">Box</span> <span class="pre">size</span> <span class="pre">in</span> <span class="pre">which</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">is</span> <span class="pre">split</span> <span class="pre">to</span> <span class="pre">apply</span> <span class="pre">the</span> <span class="pre">quantum</span> <span class="pre">filter.</span> <span class="pre">The</span> <span class="pre">hilbert</span> <span class="pre">space</span> <span class="pre">is</span> <span class="pre">better</span> <span class="pre">exploit</span>&#160; <span class="pre">if</span> <span class="pre">we</span> <span class="pre">set</span> <span class="pre">n^3=2^l.',</span> <span class="pre">'shots':</span> <span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">shots</span> <span class="pre">per</span> <span class="pre">experiment</span> <span class="pre">(only</span> <span class="pre">Qiskit</span> <span class="pre">backends)',</span> <span class="pre">'stride':</span> <span class="pre">'int.</span> <span class="pre">Stride</span> <span class="pre">used</span> <span class="pre">to</span> <span class="pre">move</span> <span class="pre">across</span> <span class="pre">the</span> <span class="pre">image.'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.optional_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.required_parameters">
+<span class="sig-name descname"><span class="pre">required_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.required_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.filters.</span></span><span class="sig-name descname"><span class="pre">QuantumFiltersBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.gate_names">
+<span class="sig-name descname"><span class="pre">gate_names</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'G1':</span> <span class="pre">['CNOT',</span> <span class="pre">'H',</span> <span class="pre">'X'],</span> <span class="pre">'G2':</span> <span class="pre">['CNOT',</span> <span class="pre">'H',</span> <span class="pre">'S'],</span> <span class="pre">'G3':</span> <span class="pre">['CNOT',</span> <span class="pre">'H',</span> <span class="pre">'T']}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.gate_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_qc">
+<span class="sig-name descname"><span class="pre">generate_qc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gates_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_gates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">19</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_gates_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gates.pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_qubits_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qubits.pickle'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.generate_qc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_qc" title="Link to this definition"></a></dt>
+<dd><p>Generate sets of random quantum gates and their associated qubits and
+saves them. This function is only used with Qiskit backends.
+:param gates_name: name of the family of quantum gates. Either G1,
+:type gates_name: str
+:param G2:
+:param G3 or Ising:
+:param num_gates: depth of the quantum circuits
+:type num_gates: int
+:param num_filters: Number of filters to apply to each feature
+:type num_filters: int
+:param num_features: Number of features of the data
+:type num_features: int
+:param save: Save the gates and qubits to pickle files
+:type save: bool
+:param saved_gates_filename: File name for saved gates set
+:type saved_gates_filename: str
+:param saved_qubits_filename: File name for saved qubit set
+:type saved_qubits_filename: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_reservoirs">
+<span class="sig-name descname"><span class="pre">generate_reservoirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gates_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_gates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">19</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reservoir.pickle'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.generate_reservoirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_reservoirs" title="Link to this definition"></a></dt>
+<dd><p>Generate sets of random quantum gates and their associated qubits and
+saves them for Qiskit backends, and unitary tensors for torch backend.
+:param gates_name: name of the family of quantum gates. Either G1,
+:type gates_name: str
+:param G2:
+:param G3 or Ising:
+:param num_gates: depth of the quantum circuits
+:type num_gates: int
+:param num_filters: Number of filters to apply to each feature
+:type num_filters: int
+:param num_features: Number of features of the data
+:type num_features: int
+:param save: Save the gates and qubits to pickle files
+:type save: bool
+:param filename: File name for saved gates or unitaries
+:type filename: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_unitaries">
+<span class="sig-name descname"><span class="pre">generate_unitaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gates_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_gates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">19</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitaries_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unitaries.pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.generate_unitaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_unitaries" title="Link to this definition"></a></dt>
+<dd><p>Generates the quantum unitaries that represent the quantum reservoirs
+(random quantum circuits)
+This function is only used with Pytorch backend
+:param gates_name: name of the family of quantum gates. Either G1,
+:type gates_name: str
+:param G2:
+:param G3 or Ising:
+:param num_gates: depth of the quantum circuits
+:type num_gates: int
+:param num_filters: Number of filters to apply to each feature
+:type num_filters: int
+:param num_features: Number of features of the data
+:type num_features: int
+:param unitaries_file_name: name of the file containing unitary list</p>
+<blockquote>
+<div><p>(only needed if save=True)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>save</strong> (<em>bool</em>) – Whether the generated unitaries are saved to a file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.get_quantum_filters">
+<span class="sig-name descname"><span class="pre">get_quantum_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.get_quantum_filters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.get_quantum_filters" title="Link to this definition"></a></dt>
+<dd><p>Runs the quantum filters for all features multiple (num_filters) times
+:param data: input data (one feature),</p>
+<blockquote>
+<div><p>shape 2D (num_samples, num_features, N, N),
+3D (num_samples, num_features, N, N, N)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tol</strong> (<em>float</em>) – tolerance for the masking matrix. All values from the
+original data which are smaller than the tolerance are set to 0</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>output quantum filters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(tensor/np.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_gates">
+<span class="sig-name descname"><span class="pre">load_gates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gates_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_gates_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_qubits_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.load_gates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_gates" title="Link to this definition"></a></dt>
+<dd><p>Load set of quantum gates and qubits. This function is only used with
+Qiskit backends.
+:param gates_name: name of the family of quantum gates. Either G1,
+:type gates_name: str
+:param G2:
+:param G3 or Ising:
+:param saved_gates_filename: File name for saved gates set
+:type saved_gates_filename: str
+:param saved_qubits_filename: File name for saved qubit set
+:type saved_qubits_filename: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_reservoirs">
+<span class="sig-name descname"><span class="pre">load_reservoirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gates_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.load_reservoirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_reservoirs" title="Link to this definition"></a></dt>
+<dd><p>Load set of quantum gates and qubits for Qiskit backends, or unitaries
+for pytorch backends.
+:param gates_name: name of the family of quantum gates. Either G1,
+:type gates_name: str
+:param G2:
+:param G3 or Ising:
+:param filename: File name for saved gates set or unitaries
+:type filename: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_unitaries">
+<span class="sig-name descname"><span class="pre">load_unitaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/filters.html#QuantumFiltersBase.load_unitaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_unitaries" title="Link to this definition"></a></dt>
+<dd><p>Loads the unitaries.  This function is only used with Pytorch backend.
+:param file_name: File name for unitaries
+:type file_name: str</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.hybrid_networks.layers">
+<span id="ingenii-quantum-hybrid-networks-layers-module"></span><h2>ingenii_quantum.hybrid_networks.layers module<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks.layers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.layers.</span></span><span class="sig-name descname"><span class="pre">QuantumFCLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qubit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ansatz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default.qubit'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/layers.html#QuantumFCLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.apply_ansatz">
+<span class="sig-name descname"><span class="pre">apply_ansatz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights_layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/layers.html#QuantumFCLayer.apply_ansatz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.apply_ansatz" title="Link to this definition"></a></dt>
+<dd><p>Applies the quantum ansatz to the quantum neural network.
+:param weight_layers: Weights of the ansatz layer
+:type weight_layers: array
+:param qubits: qubits to apply the ansatz to</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantum neural network</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(QuantumNN)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.class_parameters">
+<span class="sig-name descname"><span class="pre">class_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ansatz':</span> <span class="pre">'int.</span> <span class="pre">Number</span> <span class="pre">associated</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">ansatz</span> <span class="pre">quantum</span> <span class="pre">circuit.</span> <span class="pre">Implemented:</span> <span class="pre">1-6</span> <span class="pre">corresponding</span> <span class="pre">to</span> <span class="pre">circuit_10,</span> <span class="pre">circuit_9,</span> <span class="pre">circuit_15,</span> <span class="pre">circuit_14,</span> <span class="pre">circuit_13,</span> <span class="pre">circuit_6',</span> <span class="pre">'backend':</span> <span class="pre">'Backent</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">the</span> <span class="pre">neural</span> <span class="pre">network.</span> <span class="pre">By</span> <span class="pre">default</span> <span class="pre">we</span> <span class="pre">use</span> <span class="pre">the</span> <span class="pre">default.qubit</span> <span class="pre">backend</span> <span class="pre">from</span> <span class="pre">Pennylane.',</span> <span class="pre">'encoding':</span> <span class="pre">'str.</span> <span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">encoding</span> <span class="pre">method.</span> <span class="pre">Implemented:</span> <span class="pre">Qubit</span> <span class="pre">encoding,</span> <span class="pre">amplitude</span> <span class="pre">encoding,</span> <span class="pre">ZZFeatureMap</span> <span class="pre">and</span> <span class="pre">QAOA</span> <span class="pre">encoding.',</span> <span class="pre">'input_size':</span> <span class="pre">'int.</span> <span class="pre">Dimension</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input',</span> <span class="pre">'n_layers':</span> <span class="pre">'int.</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">layers</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">ansatz</span> <span class="pre">quantum</span> <span class="pre">circuit',</span> <span class="pre">'observables':</span> <span class="pre">&quot;str</span> <span class="pre">or</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">str.</span> <span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">observables</span> <span class="pre">measured</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">end</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">circuit.</span> <span class="pre">By</span> <span class="pre">default</span> <span class="pre">'Z'*nqbits&quot;}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.class_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.create_layer">
+<span class="sig-name descname"><span class="pre">create_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'keras'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/layers.html#QuantumFCLayer.create_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.create_layer" title="Link to this definition"></a></dt>
+<dd><p>Creates a Quantum fully connected layer and initializes it.
+:param type_layer: Type of quantum layer. It can either be ‘keras’ or ‘torch’
+:type type_layer: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantum layer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Quantum</span> <span class="pre">fully-connected</span> <span class="pre">layer.'</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.example_parameters">
+<span class="sig-name descname"><span class="pre">example_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ansatz':</span> <span class="pre">1,</span> <span class="pre">'backend':</span> <span class="pre">'default.qubit',</span> <span class="pre">'encoding':</span> <span class="pre">'qubit',</span> <span class="pre">'input_size':</span> <span class="pre">4,</span> <span class="pre">'n_layers':</span> <span class="pre">2,</span> <span class="pre">'observables':</span> <span class="pre">['ZIII',</span> <span class="pre">'IZII',</span> <span class="pre">'IIZI',</span> <span class="pre">'IIIZ']}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.example_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.get_shapes">
+<span class="sig-name descname"><span class="pre">get_shapes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/layers.html#QuantumFCLayer.get_shapes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.get_shapes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.optional_parameters">
+<span class="sig-name descname"><span class="pre">optional_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ansatz':</span> <span class="pre">'int.</span> <span class="pre">Number</span> <span class="pre">associated</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">ansatz</span> <span class="pre">quantum</span> <span class="pre">circuit.</span> <span class="pre">Implemented:</span> <span class="pre">1-6</span> <span class="pre">corresponding</span> <span class="pre">to</span> <span class="pre">circuit_10,</span> <span class="pre">circuit_9,</span> <span class="pre">circuit_15,</span> <span class="pre">circuit_14,</span> <span class="pre">circuit_13,</span> <span class="pre">circuit_6',</span> <span class="pre">'backend':</span> <span class="pre">'Backent</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">the</span> <span class="pre">neural</span> <span class="pre">network.</span> <span class="pre">By</span> <span class="pre">default</span> <span class="pre">we</span> <span class="pre">use</span> <span class="pre">the</span> <span class="pre">default.qubit</span> <span class="pre">backend</span> <span class="pre">from</span> <span class="pre">Pennylane.',</span> <span class="pre">'encoding':</span> <span class="pre">'str.</span> <span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">data</span> <span class="pre">encoding</span> <span class="pre">method.</span> <span class="pre">Implemented:</span> <span class="pre">Qubit</span> <span class="pre">encoding,</span> <span class="pre">amplitude</span> <span class="pre">encoding</span> <span class="pre">and</span> <span class="pre">ZZFeatureMap.',</span> <span class="pre">'n_layers':</span> <span class="pre">'int.</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">layers</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">ansatz</span> <span class="pre">quantum</span> <span class="pre">circuit',</span> <span class="pre">'observables':</span> <span class="pre">&quot;str</span> <span class="pre">or</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">str.</span> <span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">observables</span> <span class="pre">measured</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">end</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">circuit.</span> <span class="pre">By</span> <span class="pre">default</span> <span class="pre">'Z'*nqbits.</span> <span class="pre">If</span> <span class="pre">observables=''</span> <span class="pre">then</span> <span class="pre">the</span> <span class="pre">probabilities</span> <span class="pre">are</span> <span class="pre">measured</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">end</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">circuit</span> <span class="pre">and</span> <span class="pre">the</span> <span class="pre">output</span> <span class="pre">has</span> <span class="pre">dimension</span> <span class="pre">equal</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">qubits&quot;}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.optional_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer">
+<span class="sig-name descname"><span class="pre">qnn_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/layers.html#QuantumFCLayer.qnn_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer" title="Link to this definition"></a></dt>
+<dd><p>Creates the quantum neural network composed of the quantum encoding with qubit, amplitude or ZZ encoding,
+and a quantum ansatz.
+:param inputs: Input data
+:type inputs: array
+:param weight_layers: Weights of the ansatz layer
+:type weight_layers: array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantum neural network</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(QuantumNN)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer_QAOA">
+<span class="sig-name descname"><span class="pre">qnn_layer_QAOA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/layers.html#QuantumFCLayer.qnn_layer_QAOA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer_QAOA" title="Link to this definition"></a></dt>
+<dd><p>Creates the quantum neural network composed of the quantum encoding with QAOA encoding,
+and a quantum ansatz.
+Args</p>
+<blockquote>
+<div><p>inputs (array): Input data
+weight_layers (array): Weights of the ansatz layer
+weight_input (array): Weights of the QAOA quantum encoding</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantum neural network</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(QuantumNN)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.required_parameters">
+<span class="sig-name descname"><span class="pre">required_parameters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'input_size':</span> <span class="pre">'int.</span> <span class="pre">Dimension</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">data'}</span></em><a class="headerlink" href="#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.required_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.hybrid_networks.qinsp_filter">
+<span id="ingenii-quantum-hybrid-networks-qinsp-filter-module"></span><h2>ingenii_quantum.hybrid_networks.qinsp_filter module<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks.qinsp_filter" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.qinsp_filter.</span></span><span class="sig-name descname"><span class="pre">QuantumInspiredImageProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/qinsp_filter.html#QuantumInspiredImageProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Applies a quantum-inspired image filter.</p>
+<p>This transformation weighs each pixel’s original intensity by a relative measure
+of pairwise intensity difference versus total neighborhood contribution.</p>
+<dl class="simple">
+<dt><strong>Class Parameters</strong>:</dt><dd><ul class="simple">
+<li><p><strong>mu (float):</strong> Steepness factor. Higher values lead to sharper curves,
+whereas lower values provide smoother transitions.</p></li>
+<li><p><strong>neighbor_size (int):</strong> Neighborhood size for intensity computations.</p></li>
+<li><p><strong>percentile (int):</strong> Percentile to determine cluster values w.</p></li>
+<li><p><strong>max_iter (int):</strong> Maximum iterations for transformation.</p></li>
+<li><p><strong>threshold (float):</strong> Convergence threshold based on Mean Absolute Difference.</p></li>
+<li><p><strong>L (int):</strong> Number of cluster levels.</p></li>
+</ul>
+</dd>
+<dt><strong>Example Parameters</strong>:</dt><dd><ul class="simple">
+<li><p>mu = 0.4</p></li>
+<li><p>neighbor_size = 3</p></li>
+<li><p>percentile = 50</p></li>
+<li><p>max_iter = 10</p></li>
+<li><p>threshold = 1e-5</p></li>
+<li><p>L = 12</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.check_convergence">
+<span class="sig-name descname"><span class="pre">check_convergence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/qinsp_filter.html#QuantumInspiredImageProcessor.check_convergence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.check_convergence" title="Link to this definition"></a></dt>
+<dd><p>Check convergence of the quantum-inspired model.</p>
+<p>If the Mean Absolute Difference (MAD) of two consecutive matrices
+is smaller than the threshold, the method has converged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w1</strong> (<em>np.array</em>) – Previous image matrix.</p></li>
+<li><p><strong>w2</strong> (<em>np.array</em>) – Current image matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the model has converged, False otherwise.
+float: Mean Absolute Difference.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">im</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./filtered_image.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/qinsp_filter.html#QuantumInspiredImageProcessor.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.process" title="Link to this definition"></a></dt>
+<dd><p>Applies the quantum-inspired transformation until convergence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>im</strong> (<em>np.array</em>) – Input image.</p></li>
+<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, saves the final image. Defaults to True.</p></li>
+<li><p><strong>image_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the final image. Defaults to ‘./filtered_image.png’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Final processed image.</p>
+<p>list: List of Mean Absolute Differences between iterations.</p>
+<p>list: List of image transformations.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.select_image">
+<span class="sig-name descname"><span class="pre">select_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mae_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/qinsp_filter.html#QuantumInspiredImageProcessor.select_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.select_image" title="Link to this definition"></a></dt>
+<dd><p>Selects the output of the image transformation after multiple iterations.</p>
+<p>The selection is based on detecting peaks in the Mean Absolute Differences (MAD).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mae_list</strong> (<em>list</em>) – List of Mean Absolute Differences between iterations.</p></li>
+<li><p><strong>image_list</strong> (<em>list</em>) – List of image transformations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Final selected image.</p>
+<p>int: Iteration index at which the best image was selected.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.sum_neighbours">
+<span class="sig-name descname"><span class="pre">sum_neighbours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/qinsp_filter.html#QuantumInspiredImageProcessor.sum_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.sum_neighbours" title="Link to this definition"></a></dt>
+<dd><p>Computes the sum of the neighborhood of each pixel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<em>np.array</em>) – Input image.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sum of neighboring pixels for each pixel.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.transformation">
+<span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">I</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/qinsp_filter.html#QuantumInspiredImageProcessor.transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.transformation" title="Link to this definition"></a></dt>
+<dd><p>Applies a quantum-inspired transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>I</strong> (<em>np.array</em>) – Input image.</p></li>
+<li><p><strong>cluster</strong> (<em>np.array</em>) – Array containing the cluster values [w0, w1, …, wn].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Quantum-inspired image transformation (one iteration).</p>
+<p>np.array: Alpha values calculated as <cite>1 - (I_{i+p,j+q} - I_{ij})</cite>.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.hybrid_networks.statistics">
+<span id="ingenii-quantum-hybrid-networks-statistics-module"></span><h2>ingenii_quantum.hybrid_networks.statistics module<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks.statistics" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.statistics.</span></span><span class="sig-name descname"><span class="pre">EntanglingCapacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#EntanglingCapacity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.generate_random_params">
+<span class="sig-name descname"><span class="pre">generate_random_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#EntanglingCapacity.generate_random_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.generate_random_params" title="Link to this definition"></a></dt>
+<dd><p>Generates random parameters for the quantum circuit based on the specified parameter shape.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.meyer_wallach_entanglement">
+<span class="sig-name descname"><span class="pre">meyer_wallach_entanglement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#EntanglingCapacity.meyer_wallach_entanglement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.meyer_wallach_entanglement" title="Link to this definition"></a></dt>
+<dd><p>Computes the Meyer-Wallach entanglement measure for the quantum circuit.
+:param n_samples: Number of samples to calculate the entanglement measure
+:type n_samples: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Meyer-Wallach entanglement measure averaged over multiple samples.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.Expressibility">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.statistics.</span></span><span class="sig-name descname"><span class="pre">Expressibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pqc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#Expressibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.Expressibility.compute_expressibility">
+<span class="sig-name descname"><span class="pre">compute_expressibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#Expressibility.compute_expressibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.compute_expressibility" title="Link to this definition"></a></dt>
+<dd><p>Compute the expressibility of the PQC by comparing its fidelity distribution
+to that of Haar-random states using KL divergence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – Number of samples for the computation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Expressibility value, computed as the mean KL divergence.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.Expressibility.generate_random_params">
+<span class="sig-name descname"><span class="pre">generate_random_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#Expressibility.generate_random_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.generate_random_params" title="Link to this definition"></a></dt>
+<dd><p>Generate random parameters for the parameterized quantum circuit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params_shape</strong> (<em>tuple</em>) – Shape of the parameters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Randomly generated parameters in the range [0, 2π].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.Expressibility.haar_fidelity">
+<span class="sig-name descname"><span class="pre">haar_fidelity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#Expressibility.haar_fidelity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.haar_fidelity" title="Link to this definition"></a></dt>
+<dd><p>Generate fidelities for Haar-random states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – Number of samples for fidelity computation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of Haar-random fidelities.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.statistics.Expressibility.pqc_fidelity">
+<span class="sig-name descname"><span class="pre">pqc_fidelity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/statistics.html#Expressibility.pqc_fidelity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.statistics.Expressibility.pqc_fidelity" title="Link to this definition"></a></dt>
+<dd><p>Calculate the fidelity between quantum states produced by the PQC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – Number of samples for fidelity computation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of fidelity values for the sampled states.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.hybrid_networks.utils">
+<span id="ingenii-quantum-hybrid-networks-utils-module"></span><h2>ingenii_quantum.hybrid_networks.utils module<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks.utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.utils.roll_numpy">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.utils.</span></span><span class="sig-name descname"><span class="pre">roll_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/utils.html#roll_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.utils.roll_numpy" title="Link to this definition"></a></dt>
+<dd><p>Rolling 3D window for numpy array. This function is only used with
+Qiskit backends.
+:param input_array: input array
+:type input_array: np.array
+:param window_array: rolling 2D window array
+:type window_array: np.array
+:param dx: horizontal step, abscissa, number of columns
+:type dx: int
+:param dy: vertical step, ordinate, number of rows
+:type dy: int
+:param dz: transverse step, applicate, number of layers. Only used with
+:type dz: int
+:param 3D window:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Stride of the rolling window
+tuple: Shape of the rolling window</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ingenii_quantum.hybrid_networks.utils.roll_torch">
+<span class="sig-prename descclassname"><span class="pre">ingenii_quantum.hybrid_networks.utils.</span></span><span class="sig-name descname"><span class="pre">roll_torch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ingenii_quantum/hybrid_networks/utils.html#roll_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.hybrid_networks.utils.roll_torch" title="Link to this definition"></a></dt>
+<dd><p>Rolling 3D window for pytorch tensor. This function is only used with
+Pytorch backends.
+:param input_array: input array, shape (n_samples, N,N,N)
+:type input_array: tensor
+:param window_array: rolling 3D window array, shape (n,n,n)
+:type window_array: tensor
+:param dx: horizontal step, abscissa, number of columns
+:type dx: int
+:param dy: vertical step, ordinate, number of rows
+:type dy: int
+:param dz: transverse step, applicate, number of layers
+:type dz: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Stride of the rolling window
+tuple: Shape of the rolling window</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ingenii_quantum.hybrid_networks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingenii_quantum.hybrid_networks" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

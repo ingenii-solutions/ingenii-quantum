@@ -1,0 +1,29 @@
+ingenii\_quantum.qubo package
+=============================
+
+Submodules
+----------
+
+ingenii\_quantum.qubo.graph module
+----------------------------------
+
+.. automodule:: ingenii_quantum.qubo.graph
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.qubo.segmentation module
+-----------------------------------------
+
+.. automodule:: ingenii_quantum.qubo.segmentation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: ingenii_quantum.qubo
+   :members:
+   :undoc-members:
+   :show-inheritance:

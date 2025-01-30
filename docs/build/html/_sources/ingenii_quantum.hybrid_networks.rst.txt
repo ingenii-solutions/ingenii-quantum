@@ -1,0 +1,61 @@
+ingenii\_quantum.hybrid\_networks package
+=========================================
+
+Submodules
+----------
+
+ingenii\_quantum.hybrid\_networks.edge\_detection module
+--------------------------------------------------------
+
+.. automodule:: ingenii_quantum.hybrid_networks.edge_detection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.hybrid\_networks.filters module
+------------------------------------------------
+
+.. automodule:: ingenii_quantum.hybrid_networks.filters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.hybrid\_networks.layers module
+-----------------------------------------------
+
+.. automodule:: ingenii_quantum.hybrid_networks.layers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.hybrid\_networks.qinsp\_filter module
+------------------------------------------------------
+
+.. automodule:: ingenii_quantum.hybrid_networks.qinsp_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.hybrid\_networks.statistics module
+---------------------------------------------------
+
+.. automodule:: ingenii_quantum.hybrid_networks.statistics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.hybrid\_networks.utils module
+----------------------------------------------
+
+.. automodule:: ingenii_quantum.hybrid_networks.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: ingenii_quantum.hybrid_networks
+   :members:
+   :undoc-members:
+   :show-inheritance:

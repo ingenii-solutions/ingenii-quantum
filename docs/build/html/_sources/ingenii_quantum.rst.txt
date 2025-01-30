@@ -1,0 +1,47 @@
+ingenii\_quantum package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ingenii_quantum.hybrid_networks
+   ingenii_quantum.qubo
+   ingenii_quantum.tensor_networks
+
+Submodules
+----------
+
+ingenii\_quantum.custom module
+------------------------------
+
+.. automodule:: ingenii_quantum.custom
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.exercises module
+---------------------------------
+
+.. automodule:: ingenii_quantum.exercises
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.visualizer module
+----------------------------------
+
+.. automodule:: ingenii_quantum.visualizer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: ingenii_quantum
+   :members:
+   :undoc-members:
+   :show-inheritance:

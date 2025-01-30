@@ -1,0 +1,572 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.hybrid_networks.edge_detection &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.hybrid_networks.edge_detection</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ingenii_quantum.hybrid_networks.edge_detection</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">permutations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantumCircuit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_aer</span><span class="w"> </span><span class="kn">import</span> <span class="n">AerSimulator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_ibm_runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">SamplerV2</span> <span class="k">as</span> <span class="n">Sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit.transpiler.preset_passmanagers</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_preset_pass_manager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">roll_numpy</span><span class="p">,</span> <span class="n">roll_torch</span>
+
+<div class="viewcode-block" id="EdgeDetectorBase">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EdgeDetectorBase</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dimensions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shots</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">=</span> <span class="n">n_dimensions</span>
+
+        <span class="c1"># 1. Circuit parameters: data qubits  ancilla qubits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="n">n_dimensions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_qb</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">**</span><span class="n">n_dimensions</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anc_qb</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_qb</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">anc_qb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
+
+        <span class="c1"># Running in Pytorch</span>
+        <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="c1"># 1. set CUDA for PyTorch</span>
+            <span class="n">use_cuda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">use_cuda</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">set_device</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+            <span class="c1"># 2. Quantum operations: Hadamard and rolling Identity</span>
+            <span class="n">hadamard</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">hadamard_large</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">data_qb</span><span class="p">),</span> <span class="n">hadamard</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="c1"># Initialize the amplitude permutation unitary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">D2n</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># Running in a Qiskit environment</span>
+        <span class="k">elif</span> <span class="n">backend</span><span class="o">==</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">AerSimulator</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The only valid backend names are &quot;torch&quot; and &quot;aer_simulator&quot;. You can also provide a Qiskit Backend directly.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shots</span> <span class="o">=</span> <span class="n">shots</span>
+        <span class="c1"># Quantum operations: rolling Identity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">D2n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            
+<div class="viewcode-block" id="EdgeDetectorBase.run_box">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_box">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Run the edge detection algorithm for every box of the image</span>
+<span class="sd">        (For Qiskit version)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            box (np.array): input data</span>
+<span class="sd">            tol (np.array): Tolerance to be considered and edge</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: Edge-detected box</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Create quantum circuit</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">)</span>
+
+        <span class="c1"># Data encoding: amplitude encoding</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">initial_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">data_qb</span><span class="p">)</span>
+        <span class="n">initial_state</span><span class="p">[:</span><span class="n">box</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">box</span>
+        <span class="n">initial_state</span> <span class="o">=</span> <span class="n">initial_state</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">initial_state</span><span class="p">)</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">))</span>
+
+        <span class="c1"># Apply quantum operations</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D2n</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">))</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Measure</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">measure_all</span><span class="p">()</span>
+
+        <span class="c1"># Run quantum circuit</span>
+        <span class="n">is_simulator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span> <span class="c1"># Check if we&#39;re using a simulator or quantum hardware</span>
+        <span class="k">with</span> <span class="n">Session</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span> <span class="c1"># Create a session with such backend</span>
+            <span class="n">sampler</span> <span class="o">=</span> <span class="n">Sampler</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+            <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">default_shots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shots</span>
+
+            <span class="c1"># If running on real hardware (not a simulator), apply error mitigation</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_simulator</span><span class="p">:</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">dynamical_decoupling</span><span class="o">.</span><span class="n">enable</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">dynamical_decoupling</span><span class="o">.</span><span class="n">sequence_type</span> <span class="o">=</span> <span class="s2">&quot;XY4&quot;</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">twirling</span><span class="o">.</span><span class="n">enable_gates</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">twirling</span><span class="o">.</span><span class="n">num_randomizations</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
+
+            <span class="c1"># Transpile circuit for noisy basis gates</span>
+            <span class="n">passmanager</span> <span class="o">=</span> <span class="n">generate_preset_pass_manager</span><span class="p">(</span>
+                <span class="n">optimization_level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span>
+            <span class="p">)</span>
+            <span class="n">qc_noise</span> <span class="o">=</span> <span class="n">passmanager</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+
+            <span class="n">pub</span> <span class="o">=</span> <span class="p">(</span><span class="n">qc_noise</span><span class="p">,)</span> <span class="c1"># Prepare input</span>
+            <span class="n">job</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">pub</span><span class="p">])</span> 
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meas</span><span class="o">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+        <span class="c1"># Get statevector from counts</span>
+        <span class="c1"># Calculate binary string of basis qubits</span>
+        <span class="c1"># Let&#39;s calculate the ordered statevector</span>
+        <span class="n">new_counts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">qbits</span><span class="p">)),</span>
+                <span class="mi">0</span>
+            <span class="p">)</span>  <span class="c1"># Generate string link e.g. &#39;000&#39;, &#39;001&#39;, ...</span>
+            <span class="k">for</span> <span class="n">qbits</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_qb</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">statevector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_counts</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">new_counts</span><span class="p">)</span>
+
+        <span class="c1"># Get odd values from state</span>
+        <span class="n">final_state</span> <span class="o">=</span> <span class="n">statevector</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_qb</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span>
+
+        <span class="c1"># Select values larger than threshold</span>
+        <span class="n">edge_scan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">final_state</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">edge_scan</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">final_state</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Revert to box shape</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">edge_scan</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="EdgeDetectorBase.run_image_qiskit">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_qiskit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_image_qiskit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Run edge detection for the whole image (Qiskit version)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (np.array): input data</span>
+<span class="sd">            tol (np.array): Tolerance to be considered an edge</span>
+<span class="sd">            reduce (bool): Whether to reduce the dimension by half at the end</span>
+<span class="sd">            of the algorithm</span>
+<span class="sd">            verbose (bool): If true, tqdm is used to show the evolution.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: Edge-detected image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># 1. Get view of image</span>
+        <span class="c1"># We split it into bits of (4x4x4)</span>
+        <span class="n">windows</span><span class="p">,</span> <span class="n">shape_aux</span> <span class="o">=</span> <span class="n">roll_numpy</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">),</span>
+            <span class="n">dx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">dz</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">windows</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+
+        <span class="c1"># 2. Run every box thorugh the QC</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_box_result</span><span class="p">(</span><span class="n">box</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">box</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_box</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">get_box_result</span><span class="p">(</span><span class="n">windows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">windows</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">get_box_result</span><span class="p">(</span><span class="n">windows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">windows</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">]</span>
+
+        <span class="c1"># 3. Reshape image to original shape</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape_aux</span><span class="p">)</span>
+
+        <span class="n">transpose_idxs_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+            <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="n">transpose_idxs</span> <span class="o">=</span> <span class="n">transpose_idxs_map</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
+
+        <span class="n">reverted_image</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">transpose_idxs</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">reduce</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">reverted_image</span>
+
+        <span class="c1"># 4. Reduce image size</span>
+        <span class="n">size_x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">reverted_image_small</span> <span class="o">=</span> <span class="n">reverted_image</span><span class="p">[</span>
+            <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size_x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="p">][</span>
+            <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size_x</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">reverted_image_small</span> <span class="o">=</span> \
+                <span class="n">reverted_image_small</span><span class="p">[:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size_x</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:,</span> <span class="p">:]</span>
+
+        <span class="k">return</span> <span class="n">reverted_image_small</span></div>
+
+
+<div class="viewcode-block" id="EdgeDetectorBase.run_image_torch">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_torch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_image_torch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Run edge detection for the whole images (Pytorch)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor): input data</span>
+<span class="sd">            tol (tensor): Tolerance to be considered and edge</span>
+<span class="sd">            reduce (bool): reduce the dimension by half at the end of the</span>
+<span class="sd">            algorithm</span>
+<span class="sd">            verbose (bool): If true, tqdm is used to show the evolution.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tensor: Edge-detected image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">axis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">reshape_idxs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">normalized_reshape_idxs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+            <span class="n">windows_reshape_idxs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">reshape_idxs</span> <span class="o">=</span> <span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">normalized_reshape_idxs</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">)</span>
+            <span class="n">windows_reshape_idxs</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="c1"># 1. Get view of image</span>
+        <span class="c1"># We split it into bits of (4x4x4)</span>
+        <span class="n">windows</span><span class="p">,</span> <span class="n">shape_aux</span> <span class="o">=</span> <span class="n">roll_torch</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">),</span>
+            <span class="n">dx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">dz</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">windows</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">windows_reshape_idxs</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># 2. Data encoding: amplitude encoding</span>
+        <span class="n">norm_const</span> <span class="o">=</span> <span class="n">windows</span><span class="o">.</span><span class="n">square</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">reshape_idxs</span><span class="p">)</span>
+        <span class="n">norm_const</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_const</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-16</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">normalized_image</span> <span class="o">=</span> <span class="n">windows</span><span class="o">/</span><span class="n">norm_const</span>
+
+        <span class="c1"># 3. Flatten the last 2 dimesions to obtain an initial state</span>
+        <span class="n">normalized_flatten</span> <span class="o">=</span> <span class="n">normalized_image</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">normalized_reshape_idxs</span><span class="p">)</span>
+
+        <span class="c1"># 4. Kronecker product to increase the last dimension 1 qubit</span>
+        <span class="n">normalized_larger</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">normalized_flatten</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">D2n</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D2n</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="c1"># 5. Apply quantum operations</span>
+        <span class="n">final_state_h</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">normalized_larger</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">hadamard_large</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">D2n</span>
+<div class="viewcode-block" id="EdgeDetector2D">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D">[docs]</a>
+            <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">hadamard_large</span>
+        <span class="p">)[:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_qb</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span>
+
+        <span class="c1"># 6. Select values larger than threshold</span>
+        <span class="n">edge_scan_h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">final_state_h</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">edge_scan_h</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">final_state_h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># 7. Reshape image to original shape</span>
+        <span class="n">permutations_idxs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="n">reverted_image</span> <span class="o">=</span> <span class="n">edge_scan_h</span> \
+            <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape_aux</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">permutations_idxs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span><span class="p">])</span> \
+            <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">reverted_image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># 8. Reduce image size</span>
+        <span class="k">if</span> <span class="n">reduce</span><span class="p">:</span>
+            <span class="n">size_x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">reverted_image</span> <span class="o">=</span> <span class="n">reverted_image</span><span class="p">[</span>
+                <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size_x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">][</span>
+                <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size_x</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:</span>
+            <span class="p">]</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dimensions</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">reverted_image</span> <span class="o">=</span> \
+                    <span class="n">reverted_image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size_x</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:,</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total execution time: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">reverted_image</span></div>
+</div>
+
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># QUANTUM EDGE DETECTION ALGORITHM FOR 2D IMAGES</span>
+<span class="c1">###############################################################################</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EdgeDetector2D</span><span class="p">(</span><span class="n">EdgeDetectorBase</span><span class="p">):</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Quantum Hadamard Edge Detection algorithm for 2D images. &quot;</span>
+    <span class="s2">&quot;Implemented both with Qiskit to be run on real hardware, and on pytorch&quot;</span>
+    <span class="s2">&quot; for quantum simulation&quot;</span>
+    <span class="n">class_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) size of the (nxn) blocks in which the image is &quot;</span>
+        <span class="s2">&quot;partitioned&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Qiskit backend (simulation or real) or torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) Number of shots for the experiments, only for &quot;</span>
+        <span class="s2">&quot;qiskit backend&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;anc_qb&quot;</span><span class="p">:</span> <span class="s2">&quot; (int) Number of ancilla qubits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;total_qb&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) Total number of qubits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;Pytorch device (cpu, cuda)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;H_large&quot;</span><span class="p">:</span> <span class="s2">&quot;Id </span><span class="se">\t</span><span class="s2">ensordot H&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;D2n&quot;</span><span class="p">:</span> <span class="s2">&quot;Decrement gate&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">required_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) size of the (nxn) blocks in which the image is &quot;</span>
+        <span class="s2">&quot;partitioned&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Qiskit backend (simulation or real) or torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) Number of shots for the experiments, only for qiskit &quot;</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">example_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="mi">512</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Quantum Hadamard Edge Detection class for 2D images,</span>
+<span class="sd">            size (int): (int) size of the (nxn) blocks in which the image is</span>
+<span class="sd">            partitioned</span>
+<span class="sd">            backend: Qiskit backend (simulation or real) or torch</span>
+<span class="sd">            shots (int): Number of shots for the experiments, only for qiskit</span>
+<span class="sd">            backend</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EdgeDetector2D.run">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the edge detection algorithm with either Pytorch or Qiskit code</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (tensor/np.array): input data</span>
+<span class="sd">            tol (tensor/np.array): Tolerance to be considered and edge</span>
+<span class="sd">            reduce (bool): reduce the dimension by half at the end</span>
+<span class="sd">            verbose (bool): If true, tqdm is used to show the evolution.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array/tensor: Edge-detected image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_image_torch</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">reduce</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_image_qiskit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">reduce</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># QUANTUM EDGE DETECTION ALGORITHM FOR 3D VOLUMES</span>
+<span class="c1">###############################################################################</span>
+
+<div class="viewcode-block" id="EdgeDetector3D">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EdgeDetector3D</span><span class="p">(</span><span class="n">EdgeDetectorBase</span><span class="p">):</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Quantum Hadamard Edge Detection algorithm for 3D volumes. &quot;</span>
+    <span class="s2">&quot;Implemented both with Qiskit to be run on real hardware, and on pytorch &quot;</span>
+    <span class="s2">&quot;for quantum simulation&quot;</span>
+    <span class="n">class_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) size of the (nxn) blocks in which the image is &quot;</span>
+        <span class="s2">&quot;partitioned&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Qiskit backend (simulation or real) or torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) Number of shots for the experiments, &quot;</span>
+        <span class="s2">&quot;only for qiskit backend&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;anc_qb&quot;</span><span class="p">:</span> <span class="s2">&quot; (int) Number of ancilla qubits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;total_qb&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) Total number of qubits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;Pytorch device (cpu, cuda)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;H_large&quot;</span><span class="p">:</span> <span class="s2">&quot;Id </span><span class="se">\t</span><span class="s2">ensordot H&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;D2n&quot;</span><span class="p">:</span> <span class="s2">&quot;Decrement gate&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">required_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) size of the (nxn) blocks in which the image is &quot;</span>
+        <span class="s2">&quot;partitioned&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Qiskit backend (simulation or real) or torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="s2">&quot;(int) Number of shots for the experiments, &quot;</span>
+        <span class="s2">&quot;only for qiskit backend&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">example_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;torch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shots&quot;</span><span class="p">:</span> <span class="mi">512</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Quantum Hadamard Edge dectection class for 3D images</span>
+<span class="sd">            size (int): size of blocks</span>
+<span class="sd">            backend: Qiskit backend, or torch</span>
+<span class="sd">            shots (int): Number of experiments to run, only for Qiskit backend</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">n_dimensions</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EdgeDetector3D.run">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">num_filters</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Run edge detection for different rotations of the image.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (np.array): input data (samples, features, dim,dim,dim)</span>
+<span class="sd">            num_filters (int): Number of rotations (permutations of the last 3</span>
+<span class="sd">            dimension) to output</span>
+<span class="sd">            tol (float):Tolerance to consider an edge</span>
+<span class="sd">            reduce (bool): reduce the size of the image at the end</span>
+<span class="sd">            verbose (bool): If true, tqdm is used to show the evolution.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array/tensor: Edge-detected image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">reduce</span><span class="p">:</span>
+            <span class="n">fin_shape</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fin_shape</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">permutations</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="n">data_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">num_filters</span><span class="p">,</span>
+                <span class="n">fin_shape</span><span class="p">,</span> <span class="n">fin_shape</span><span class="p">,</span> <span class="n">fin_shape</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">num_filters</span><span class="p">,</span>
+                <span class="n">fin_shape</span><span class="p">,</span> <span class="n">fin_shape</span><span class="p">,</span> <span class="n">fin_shape</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_filters</span><span class="p">):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+                <span class="n">data_out</span><span class="p">[:,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">run_image_torch</span><span class="p">(</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">tol</span><span class="p">,</span> <span class="n">reduce</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data_out</span><span class="p">[:,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">run_image_qiskit</span><span class="p">(</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">tol</span><span class="p">,</span> <span class="n">reduce</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data_out</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

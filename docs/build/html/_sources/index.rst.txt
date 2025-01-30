@@ -1,0 +1,27 @@
+Welcome to Ingenii Quantum's Documentation!
+===========================================
+
+Ingenii Quantum is a Python package for quantum and quantum-inspired machine learning.
+
+Installation
+------------
+To install Ingenii Quantum, run:
+   
+.. code-block:: bash
+
+    pip install ingenii-quantum
+
+Table of Contents
+=================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide
+
+   source/installation
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference
+
+   source/modules

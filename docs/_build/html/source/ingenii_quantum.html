@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.visualizer &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ingenii_quantum.hybrid_networks.edge_detection" href="ingenii_quantum.hybrid_networks.html" />
+    <link rel="prev" title="ingenii_quantum" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">ingenii_quantum</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ingenii_quantum.visualizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.area_segment"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.area_segment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.bit_string_index"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.bit_string_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.color_range"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.color_range()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.count_control_num"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.count_control_num()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_arrow"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_arrow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_basis_states"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_basis_states()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_bloch_sphere"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_bloch_sphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_color_legend"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_color_legend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_geometric_plots"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_geometric_plots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_phase_disks"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_phase_disks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_probabilities"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_probabilities()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_qsphere"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_qsphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_state_space"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.draw_state_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.flip_bit"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.flip_bit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.get_colors"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.get_colors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.get_statevectors"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.get_statevectors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.get_transformed_bitstrings"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.get_transformed_bitstrings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.height_for_probability"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.height_for_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.hex_to_rgb"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.hex_to_rgb()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.lex_index"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.lex_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.n_choose_k"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.n_choose_k()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.phase_to_rgb"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.phase_to_rgb()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ingenii_quantum.visualizer.QuantumVisualizer.statevector_to_angles"><code class="docutils literal notranslate"><span class="pre">QuantumVisualizer.statevector_to_angles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ingenii-quantum-hybrid-networks">ingenii_quantum.hybrid_networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html">ingenii_quantum.hybrid_networks.edge_detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.filters">ingenii_quantum.hybrid_networks.filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.layers">ingenii_quantum.hybrid_networks.layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.qinsp_filter">ingenii_quantum.hybrid_networks.qinsp_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.statistics">ingenii_quantum.hybrid_networks.statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.utils">ingenii_quantum.hybrid_networks.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ingenii-quantum-qubo">ingenii_quantum.qubo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.qubo.html">ingenii_quantum.qubo.graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.qubo.html#module-ingenii_quantum.qubo.segmentation">ingenii_quantum.qubo.segmentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ingenii-quantum-tensor-networks">ingenii_quantum.tensor_networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.tensor_networks.html">ingenii_quantum.tensor_networks.VBMF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#module-ingenii_quantum.tensor_networks.tucker_decomposition">ingenii_quantum.tensor_networks.tucker_decomposition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">ingenii_quantum</a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.visualizer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/ingenii_quantum.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ingenii_quantum.visualizer">
+<span id="ingenii-quantum-visualizer"></span><h1>ingenii_quantum.visualizer<a class="headerlink" href="#module-ingenii_quantum.visualizer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ingenii_quantum.visualizer.</span></span><span class="sig-name descname"><span class="pre">QuantumVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.area_segment">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">area_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.area_segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.area_segment" title="Link to this definition"></a></dt>
+<dd><p>Calculate the area of a circular segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>float</em>) – The radius of the circle.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The height of the segment (distance from the chord to the arc).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The area of the circular segment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.bit_string_index">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bit_string_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.bit_string_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.bit_string_index" title="Link to this definition"></a></dt>
+<dd><p>Return the index of a string of 0s and 1s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>string</em>) – bit string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>index of the string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.color_range">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">color_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.color_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.color_range" title="Link to this definition"></a></dt>
+<dd><p>Generate a color gradient between two colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>str</em>) – The starting color in hexadecimal.</p></li>
+<li><p><strong>c2</strong> (<em>str</em>) – The ending color in hexadecimal.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – The number of gradient steps.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of colors in hexadecimal format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.count_control_num">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count_control_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gate_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.count_control_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.count_control_num" title="Link to this definition"></a></dt>
+<dd><p>Count the number of consecutive ‘c’ characters in a gate name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>gate_name</strong> (<em>str</em>) – The name of the gate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of consecutive ‘c’ characters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_arrow">
+<span class="sig-name descname"><span class="pre">draw_arrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_arrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_arrow" title="Link to this definition"></a></dt>
+<dd><p>Draw arrows connecting states between layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector</strong> (<em>np.ndarray</em>) – Current statevector (after the gate is applied).</p></li>
+<li><p><strong>old_vector</strong> (<em>np.ndarray</em>) – Previous statevector (before the gate is applied).</p></li>
+<li><p><strong>position</strong> (<em>int</em>) – The layer index (x-axis position in the visualization).</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerance for non-zero probabilities.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_basis_states">
+<span class="sig-name descname"><span class="pre">draw_basis_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_basis_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_basis_states" title="Link to this definition"></a></dt>
+<dd><p>Draw basis states as text labels on the y-axis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_bloch_sphere">
+<span class="sig-name descname"><span class="pre">draw_bloch_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_bloch_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_bloch_sphere" title="Link to this definition"></a></dt>
+<dd><p>Visualize a single-qubit quantum state on the Bloch sphere.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<em>float</em>) – Polar angle for the Bloch vector (default 0).</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – Azimuthal angle for the Bloch vector (default 0).</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – A Matplotlib axes to draw on (optional).</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Path to save the plot (optional).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Matplotlib figure object (if <cite>fig</cite> is not provided).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.figure.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_color_legend">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">draw_color_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_color_legend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_color_legend" title="Link to this definition"></a></dt>
+<dd><p>Plot the color legend for the qsphere and state space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figsize</strong> (<em>tuple</em>) – Figure size in inches.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – An optional Axes object to be used for
+the visualization output. If none is specified a new matplotlib
+Figure will be created and used. Additionally, if specified there
+will be no returned Figure since it is redundant.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of divisions of the color legend.</p></li>
+<li><p><strong>use_degrees</strong> (<em>bool</em>) – An optional boolean indicating whether to use</p></li>
+<li><p><strong>numbers.</strong> (<em>degrees</em><em> or </em><em>complex</em>)</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – File to save the plot if desired</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A matplotlib figure instance if the <code class="docutils literal notranslate"><span class="pre">ax</span></code> kwarg is not set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_geometric_plots">
+<span class="sig-name descname"><span class="pre">draw_geometric_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_math</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_geometric_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_geometric_plots" title="Link to this definition"></a></dt>
+<dd><p>Create and visualize geometric representations of a quantum state,
+including phase disks, the Q-sphere or Bloch sphere, and a color legend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – If provided, saves the generated plot
+to the specified file. Defaults to None.</p></li>
+<li><p><strong>display_math</strong> (<em>bool</em>) – If True, show the fullness of the disks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created figure containing the plots.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.figure.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_phase_disks">
+<span class="sig-name descname"><span class="pre">draw_phase_disks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_math</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_phase_disks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_phase_disks" title="Link to this definition"></a></dt>
+<dd><p>Plot the color legend for the qsphere and state space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – An optional Axes object to be used for
+the visualization output. If none is specified a new matplotlib
+Figure will be created and used. Additionally, if specified there
+will be no returned Figure since it is redundant.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – File to save the plot if desired</p></li>
+<li><p><strong>display_math</strong> (<em>bool</em>) – If True, show the fullness of the disk</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A matplotlib figure instance if the <code class="docutils literal notranslate"><span class="pre">ax</span></code> kwarg is not set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_probabilities">
+<span class="sig-name descname"><span class="pre">draw_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statevector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_probabilities" title="Link to this definition"></a></dt>
+<dd><p>Draw probability circles for a given statevector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statevector</strong> (<em>np.ndarray</em>) – The statevector.</p></li>
+<li><p><strong>position</strong> (<em>int</em>) – The x-axis position of the circles.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – axes to draw the probabilities</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerance for non-zero probabilities.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_qsphere">
+<span class="sig-name descname"><span class="pre">draw_qsphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_state_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_state_phases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_qsphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_qsphere" title="Link to this definition"></a></dt>
+<dd><p>Plot the qsphere representation of a quantum state.
+Here, the size of the points is proportional to the probability
+of the corresponding term in the state and the color represents
+the phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figsize</strong> (<em>tuple</em>) – Figure size in inches.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – An optional Axes object to be used for
+the visualization output. If none is specified a new matplotlib
+Figure will be created and used. Additionally, if specified there
+will be no returned Figure since it is redundant.</p></li>
+<li><p><strong>show_state_labels</strong> (<em>bool</em>) – An optional boolean indicating whether to
+show labels for each basis state.</p></li>
+<li><p><strong>show_state_phases</strong> (<em>bool</em>) – An optional boolean indicating whether to
+show the phase for each basis state.</p></li>
+<li><p><strong>use_degrees</strong> (<em>bool</em>) – An optional boolean indicating whether to use
+radians or degrees for the phase values in the plot.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – tolerance to show basis state on the sphere</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – File to save the plot if desired</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A matplotlib figure instance if the <code class="docutils literal notranslate"><span class="pre">ax</span></code> kwarg is not set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.draw_state_space">
+<span class="sig-name descname"><span class="pre">draw_state_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot_circuit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_phase_disks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_math</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.draw_state_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.draw_state_space" title="Link to this definition"></a></dt>
+<dd><p>Visualize the quantum circuit’s evolution. Optionally include the circuit diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plot_circuit</strong> (<em>bool</em>) – If True, include the quantum circuit diagram in the figure.</p></li>
+<li><p><strong>plt_phase_disks</strong> (<em>bool</em>) – If True, include the diagram of phase disks in the figure.</p></li>
+<li><p><strong>display_math</strong> (<em>bool</em>) – If True, include the value of the statevectors in the figure.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – File name to save the figure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>figure of the state space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.pyplot.figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.flip_bit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flip_bit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bitstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.flip_bit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.flip_bit" title="Link to this definition"></a></dt>
+<dd><p>Flip the bit at position i in a binary string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bitstring</strong> (<em>str</em>) – The binary string.</p></li>
+<li><p><strong>i</strong> (<em>int</em>) – The position of the bit to flip (0-indexed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The binary string with the bit at position i flipped.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.get_colors">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.get_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.get_colors" title="Link to this definition"></a></dt>
+<dd><p>Generate a full cyclic color map with gradients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – Total number of colors.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of colors in hexadecimal format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.get_statevectors">
+<span class="sig-name descname"><span class="pre">get_statevectors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.get_statevectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.get_statevectors" title="Link to this definition"></a></dt>
+<dd><p>Extract statevectors and gate information from the quantum circuit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(list of statevectors, gate set)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.get_transformed_bitstrings">
+<span class="sig-name descname"><span class="pre">get_transformed_bitstrings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unitary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.get_transformed_bitstrings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.get_transformed_bitstrings" title="Link to this definition"></a></dt>
+<dd><p>Compute the transformation of all basis states under a unitary matrix and output the transformed bitstrings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unitary</strong> (<em>np.ndarray</em>) – The unitary matrix of size (2^n, 2^n).</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerance for considering a value as non-zero.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping input bitstrings to their transformed bitstrings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.height_for_probability">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height_for_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.height_for_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.height_for_probability" title="Link to this definition"></a></dt>
+<dd><p>Calculate the height (h) of a circular segment corresponding to a given probability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of the circle.</p></li>
+<li><p><strong>prob</strong> (<em>float</em>) – Desired probability (fraction of the circle’s area to fill).</p></li>
+<li><p><strong>total_area</strong> (<em>float</em>) – Total area of the circle.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Height (h) of the segment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.hex_to_rgb">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hex_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.hex_to_rgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.hex_to_rgb" title="Link to this definition"></a></dt>
+<dd><p>Convert a hexadecimal color string to an RGB tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – The hexadecimal color string.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The RGB color as a numpy array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.lex_index">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lex_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.lex_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.lex_index" title="Link to this definition"></a></dt>
+<dd><p>Return  the lex index of a combination..</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – the total number of options .</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The number of elements.</p></li>
+<li><p><strong>lst</strong> (<em>list</em>) – list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns int index for lex order</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>VisualizationError</strong> – if length of list is not equal to k</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.n_choose_k">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_choose_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.n_choose_k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.n_choose_k" title="Link to this definition"></a></dt>
+<dd><p>Return the number of combinations for n choose k.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – the total number of options .</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The number of elements.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>binomial coefficient</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.phase_to_rgb">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phase_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complex_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_black</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.phase_to_rgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.phase_to_rgb" title="Link to this definition"></a></dt>
+<dd><p>Map a phase of a complex number to a color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>complex_number</strong> (<em>complex</em>) – The input complex number.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of colors in the gradient.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>RGB color in hexadecimal format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ingenii_quantum.visualizer.QuantumVisualizer.statevector_to_angles">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">statevector_to_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ingenii_quantum/visualizer.html#QuantumVisualizer.statevector_to_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ingenii_quantum.visualizer.QuantumVisualizer.statevector_to_angles" title="Link to this definition"></a></dt>
+<dd><p>Convert a quantum statevector into spherical coordinates (theta, phi) for Bloch sphere representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phi</strong> (<em>ndarray</em>) – A 2-element array-like object representing a single-qubit statevector.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Polar angle (0 to pi).
+phi (float): Azimuthal angle (0 to 2*pi).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>theta (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="ingenii-quantum-hybrid-networks">
+<h1>ingenii_quantum.hybrid_networks<a class="headerlink" href="#ingenii-quantum-hybrid-networks" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html">ingenii_quantum.hybrid_networks.edge_detection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.size"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.backend"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.shots"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.shots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector2D.run"><code class="docutils literal notranslate"><span class="pre">EdgeDetector2D.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.size"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.backend"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.shots"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.shots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetector3D.run"><code class="docutils literal notranslate"><span class="pre">EdgeDetector3D.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.n_dimensions"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.n_dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.size"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.backend"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.shots"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.shots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.total_qb"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.total_qb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.anc_qb"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.anc_qb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.data_qb"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.data_qb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.device"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_box"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.run_box()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_qiskit"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.run_image_qiskit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.edge_detection.EdgeDetectorBase.run_image_torch"><code class="docutils literal notranslate"><span class="pre">EdgeDetectorBase.run_image_torch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.filters">ingenii_quantum.hybrid_networks.filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.shape"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.shape</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.stride"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.stride</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.encoding"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.encoding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.shots"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.shots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters2D.backend"><code class="docutils literal notranslate"><span class="pre">QuantumFilters2D.backend</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.shape"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.shape</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.stride"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.stride</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.encoding"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.encoding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.shots"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.shots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFilters3D.backend"><code class="docutils literal notranslate"><span class="pre">QuantumFilters3D.backend</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.n_dimensions"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.n_dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.shape"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.shape</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.stride"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.stride</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.encoding"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.encoding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.shots"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.shots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.backend"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.nqbits"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.nqbits</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.device"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.unitaries_list"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.unitaries_list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.num_filters"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.num_filters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.num_features"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.num_features</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.gates_name"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.gates_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.info"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.gate_names"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.gate_names</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_qc"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.generate_qc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_reservoirs"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.generate_reservoirs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.generate_unitaries"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.generate_unitaries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.get_quantum_filters"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.get_quantum_filters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_gates"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.load_gates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_reservoirs"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.load_reservoirs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.filters.QuantumFiltersBase.load_unitaries"><code class="docutils literal notranslate"><span class="pre">QuantumFiltersBase.load_unitaries()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.layers">ingenii_quantum.hybrid_networks.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.input_size"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.input_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.n_layers"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.n_layers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.encoding"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.encoding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.ansatz"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.ansatz</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.observables"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.observables</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.backend"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.nqbits"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.nqbits</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.dev"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.dev</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.apply_ansatz"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.apply_ansatz()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.create_layer"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.create_layer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.get_shapes"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.get_shapes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.qnn_layer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer_QAOA"><code class="docutils literal notranslate"><span class="pre">QuantumFCLayer.qnn_layer_QAOA()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.qinsp_filter">ingenii_quantum.hybrid_networks.qinsp_filter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.check_convergence"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.check_convergence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.process"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.select_image"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.select_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.sum_neighbours"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.sum_neighbours()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.qinsp_filter.QuantumInspiredImageProcessor.transformation"><code class="docutils literal notranslate"><span class="pre">QuantumInspiredImageProcessor.transformation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.statistics">ingenii_quantum.hybrid_networks.statistics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity"><code class="docutils literal notranslate"><span class="pre">EntanglingCapacity</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.generate_random_params"><code class="docutils literal notranslate"><span class="pre">EntanglingCapacity.generate_random_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.EntanglingCapacity.meyer_wallach_entanglement"><code class="docutils literal notranslate"><span class="pre">EntanglingCapacity.meyer_wallach_entanglement()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility"><code class="docutils literal notranslate"><span class="pre">Expressibility</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.compute_expressibility"><code class="docutils literal notranslate"><span class="pre">Expressibility.compute_expressibility()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.generate_random_params"><code class="docutils literal notranslate"><span class="pre">Expressibility.generate_random_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.haar_fidelity"><code class="docutils literal notranslate"><span class="pre">Expressibility.haar_fidelity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.statistics.Expressibility.pqc_fidelity"><code class="docutils literal notranslate"><span class="pre">Expressibility.pqc_fidelity()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#module-ingenii_quantum.hybrid_networks.utils">ingenii_quantum.hybrid_networks.utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.utils.roll_numpy"><code class="docutils literal notranslate"><span class="pre">roll_numpy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.utils.roll_torch"><code class="docutils literal notranslate"><span class="pre">roll_torch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="ingenii-quantum-qubo">
+<h1>ingenii_quantum.qubo<a class="headerlink" href="#ingenii-quantum-qubo" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.qubo.html">ingenii_quantum.qubo.graph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.apply_similarity"><code class="docutils literal notranslate"><span class="pre">apply_similarity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.canberra_distance"><code class="docutils literal notranslate"><span class="pre">canberra_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.chebyshev_distance"><code class="docutils literal notranslate"><span class="pre">chebyshev_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.create_graph"><code class="docutils literal notranslate"><span class="pre">create_graph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.euclidean_distance"><code class="docutils literal notranslate"><span class="pre">euclidean_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.gaussian_similarity"><code class="docutils literal notranslate"><span class="pre">gaussian_similarity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.image_to_grid_graph"><code class="docutils literal notranslate"><span class="pre">image_to_grid_graph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.jensen_shannon_divergence"><code class="docutils literal notranslate"><span class="pre">jensen_shannon_divergence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.minkowski_distance"><code class="docutils literal notranslate"><span class="pre">minkowski_distance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.qubo.html#module-ingenii_quantum.qubo.segmentation">ingenii_quantum.qubo.segmentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.segmentation.QUBO_formulation"><code class="docutils literal notranslate"><span class="pre">QUBO_formulation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.segmentation.decode_binary_string"><code class="docutils literal notranslate"><span class="pre">decode_binary_string()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.qubo.html#ingenii_quantum.qubo.segmentation.gurobi_qubo_solver"><code class="docutils literal notranslate"><span class="pre">gurobi_qubo_solver()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="ingenii-quantum-tensor-networks">
+<h1>ingenii_quantum.tensor_networks<a class="headerlink" href="#ingenii-quantum-tensor-networks" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.tensor_networks.html">ingenii_quantum.tensor_networks.VBMF</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.EVBMF"><code class="docutils literal notranslate"><span class="pre">EVBMF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.EVBsigma2"><code class="docutils literal notranslate"><span class="pre">EVBsigma2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.VBMF"><code class="docutils literal notranslate"><span class="pre">VBMF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.VBsigma2"><code class="docutils literal notranslate"><span class="pre">VBsigma2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.estimate_ranks"><code class="docutils literal notranslate"><span class="pre">estimate_ranks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.phi0"><code class="docutils literal notranslate"><span class="pre">phi0()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.phi1"><code class="docutils literal notranslate"><span class="pre">phi1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.VBMF.tau"><code class="docutils literal notranslate"><span class="pre">tau()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#module-ingenii_quantum.tensor_networks.tucker_decomposition">ingenii_quantum.tensor_networks.tucker_decomposition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.tucker_decomposition.count_params"><code class="docutils literal notranslate"><span class="pre">count_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingenii_quantum.tensor_networks.html#ingenii_quantum.tensor_networks.tucker_decomposition.tucker_decomposition_conv_layer"><code class="docutils literal notranslate"><span class="pre">tucker_decomposition_conv_layer()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="ingenii_quantum" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ingenii_quantum.hybrid_networks.html" class="btn btn-neutral float-right" title="ingenii_quantum.hybrid_networks.edge_detection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

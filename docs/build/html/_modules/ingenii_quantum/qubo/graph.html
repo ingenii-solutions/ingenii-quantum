@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.qubo.graph &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.qubo.graph</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ingenii_quantum.qubo.graph</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">canberra</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">rel_entr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
+
+
+<div class="viewcode-block" id="euclidean_distance">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.euclidean_distance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Euclidean distance.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      p1 (float): pixel value 1</span>
+<span class="sd">      p2 (float): pixel value 2</span>
+<span class="sd">    Returns:</span>
+<span class="sd">      float: Euclidean distance between p1 and p2</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="minkowski_distance">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.minkowski_distance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">minkowski_distance</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Minkowski distance.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      p1 (float): pixel value 1</span>
+<span class="sd">      p2 (float): pixel value 2</span>
+<span class="sd">    Returns:</span>
+<span class="sd">      float: Minkowski distance between p1 and p2</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">),</span> <span class="n">r</span><span class="p">)),</span> <span class="mi">1</span><span class="o">/</span><span class="n">r</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="chebyshev_distance">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.chebyshev_distance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">chebyshev_distance</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Chebyshev distance.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      p1 (float): pixel value 1</span>
+<span class="sd">      p2 (float): pixel value 2</span>
+<span class="sd">    Returns:</span>
+<span class="sd">      float: Chebyshev distance between p1 and p2</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="jensen_shannon_divergence">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.jensen_shannon_divergence">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">jensen_shannon_divergence</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Jensen-Shannon Divergence.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      p1 (float): pixel value 1</span>
+<span class="sd">      p2 (float): pixel value 2</span>
+<span class="sd">    Returns:</span>
+<span class="sd">      float: Jensen-Shannon Divergence between p1 and p2</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span> <span class="o">+</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rel_entr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">rel_entr</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span></div>
+
+
+<div class="viewcode-block" id="gaussian_similarity">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.gaussian_similarity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_similarity</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">  Gaussian similarity.</span>
+<span class="sd">  Args:</span>
+<span class="sd">    p1 (float): pixel value 1</span>
+<span class="sd">    p2 (float): pixel value 2</span>
+<span class="sd">  Returns:</span>
+<span class="sd">    float: Gaussian similarity between p1 and p2</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">gaussian_similairity_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">gaussian_similairity_score</span></div>
+
+
+<span class="c1"># Canberra Distance</span>
+<div class="viewcode-block" id="canberra_distance">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.canberra_distance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">canberra_distance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Canberra distance.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      p1 (float): pixel value 1</span>
+<span class="sd">      p2 (float): pixel value 2</span>
+<span class="sd">    Returns:</span>
+<span class="sd">      float: Canberra distance between p1 and p2</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">canberra</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="apply_similarity">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.apply_similarity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_similarity</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span><span class="n">image</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">  Apply chosen similarity to image.</span>
+<span class="sd">  Args:</span>
+<span class="sd">    type (str): Similarity type name</span>
+<span class="sd">    image (np.array): input image</span>
+<span class="sd">    x1 (int): x coordinates pixel 1</span>
+<span class="sd">    y1 (int): y coordinates pixel 1</span>
+<span class="sd">    x2 (int): x coordinates pixel 2</span>
+<span class="sd">    y2 (int): y coordinates pixel 2</span>
+<span class="sd">  Returns:</span>
+<span class="sd">    weight (float): Edge weight</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">if</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Gaussian&#39;</span><span class="p">:</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">gaussian_similarity</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],</span><span class="n">image</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span> <span class="n">sigma</span><span class="p">))</span>
+  <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Euclidean&#39;</span><span class="p">:</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">euclidean_distance</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],</span><span class="n">image</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">]))</span>
+  <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Minkowski&#39;</span><span class="p">:</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">minkowski_distance</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">image</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">3</span><span class="p">))</span>
+  <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Chebyshev&#39;</span><span class="p">:</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">chebyshev_distance</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">image</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+  <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Jensen&#39;</span><span class="p">:</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">jensen_shannon_divergence</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+  <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Canberra&#39;</span><span class="p">:</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">canberra_distance</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">image</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+  <span class="k">return</span> <span class="n">weight</span></div>
+
+
+
+
+<div class="viewcode-block" id="image_to_grid_graph">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.image_to_grid_graph">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">image_to_grid_graph</span><span class="p">(</span><span class="n">gray_img</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;Gaussian&#39;</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Convert a grayscale image to a grid graph with Gaussian similarity as edge weights.</span>
+
+<span class="sd">  Parameters:</span>
+<span class="sd">    gray_img (numpy.ndarray): Grayscale image.</span>
+<span class="sd">    type (str): Similarity type name</span>
+<span class="sd">    sigma (float): Parameter for Gaussian similarity.</span>
+
+<span class="sd">  Returns:</span>
+<span class="sd">    list: List of edges with weights for the graph.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">gray_img</span><span class="o">.</span><span class="n">shape</span>  
+  <span class="k">if</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Gaussian&#39;</span><span class="p">:</span> <span class="c1"># Calculate std as the data std unless stated otherwise</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">gray_img</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+  <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">h</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">nx_elist</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="c1"># Calculate similarity between neighboring pixels</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">w</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">i</span><span class="o">//</span><span class="n">w</span><span class="p">,</span> <span class="n">i</span><span class="o">%</span><span class="n">w</span>
+    <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">gray_img</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">w</span> <span class="o">+</span> <span class="n">y</span>
+      <span class="n">weight</span> <span class="o">=</span> <span class="n">apply_similarity</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span><span class="n">gray_img</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span><span class="n">sigma</span><span class="p">)</span>
+      <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">weight</span><span class="p">))</span>
+      <span class="n">nx_elist</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">y</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">j</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">w</span> <span class="o">+</span> <span class="n">y</span><span class="o">-</span><span class="mi">1</span>
+      <span class="n">weight</span> <span class="o">=</span> <span class="n">apply_similarity</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span><span class="n">gray_img</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">sigma</span><span class="p">)</span>
+      <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">weight</span><span class="p">))</span>
+      <span class="n">nx_elist</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">weight</span><span class="p">))</span>
+  <span class="n">w_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span>
+  <span class="c1"># Normalize weights to the [-1,1] domain</span>
+  <span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">w_list_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">w_list</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="n">normalized_nx_elist</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nx_elist</span><span class="p">)):</span>
+    <span class="n">normalized_nx_elist</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">nx_elist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">nx_elist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">w_list_scaled</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+  <span class="k">return</span> <span class="n">normalized_nx_elist</span></div>
+
+
+
+<div class="viewcode-block" id="create_graph">
+<a class="viewcode-back" href="../../../ingenii_quantum.qubo.html#ingenii_quantum.qubo.graph.create_graph">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_graph</span><span class="p">(</span><span class="n">data_small</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;Gaussian&#39;</span><span class="p">,</span> <span class="n">sd_prop</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Function to create the Graph encoding the image, where the edges are calculated using the Gaussian similarity between pixels.</span>
+<span class="sd">  Here we perform hyperparameter optimization for the stadard deviation, ensuring that  the proportion of the two tails of the weights distribution is around 0.17. </span>
+
+<span class="sd">    data_small (np.array): input data</span>
+<span class="sd">    type (str): Similarity type name</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">data_small</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="k">if</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;Gaussian&#39;</span><span class="p">:</span>
+    <span class="n">normalized_nx_elist</span> <span class="o">=</span> <span class="n">image_to_grid_graph</span><span class="p">(</span><span class="n">data_small</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sd_prop</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> 
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">grid_2d_graph</span><span class="p">(</span><span class="n">data_small</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data_small</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_weighted_edges_from</span><span class="p">(</span><span class="n">normalized_nx_elist</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span> <span class="c1"># For other similarity measures there is no hyperparameter search</span>
+    <span class="n">normalized_nx_elist</span> <span class="o">=</span> <span class="n">image_to_grid_graph</span><span class="p">(</span><span class="n">data_small</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">grid_2d_graph</span><span class="p">(</span><span class="n">data_small</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data_small</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_weighted_edges_from</span><span class="p">(</span><span class="n">normalized_nx_elist</span><span class="p">)</span>
+    <span class="n">std_p</span> <span class="o">=</span><span class="mi">1</span>
+  <span class="k">return</span> <span class="n">G</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

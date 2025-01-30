@@ -1,0 +1,29 @@
+ingenii\_quantum.tensor\_networks package
+=========================================
+
+Submodules
+----------
+
+ingenii\_quantum.tensor\_networks.VBMF module
+---------------------------------------------
+
+.. automodule:: ingenii_quantum.tensor_networks.VBMF
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ingenii\_quantum.tensor\_networks.tucker\_decomposition module
+--------------------------------------------------------------
+
+.. automodule:: ingenii_quantum.tensor_networks.tucker_decomposition
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: ingenii_quantum.tensor_networks
+   :members:
+   :undoc-members:
+   :show-inheritance:

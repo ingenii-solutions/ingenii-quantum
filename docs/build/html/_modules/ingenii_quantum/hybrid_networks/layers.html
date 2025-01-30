@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ingenii_quantum.hybrid_networks.layers &mdash; Ingenii Quantum 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ingenii Quantum
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ingenii Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ingenii_quantum.hybrid_networks.layers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ingenii_quantum.hybrid_networks.layers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pennylane</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+
+<div class="viewcode-block" id="QuantumFCLayer">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuantumFCLayer</span><span class="p">:</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Quantum fully-connected layer.&quot;</span>
+    <span class="n">class_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;input_size&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Dimension of the input&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_layers&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Number of layers of the ansatz quantum circuit&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;str. Name of the data encoding method. Implemented: &quot;</span>
+        <span class="s2">&quot;Qubit encoding, amplitude encoding, ZZFeatureMap and QAOA encoding.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ansatz&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Number associated to the ansatz quantum circuit. &quot;</span>
+        <span class="s2">&quot;Implemented: 1-6 corresponding to circuit_10, circuit_9, circuit_15, &quot;</span>
+        <span class="s2">&quot;circuit_14, circuit_13, circuit_6&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;observables&quot;</span><span class="p">:</span> <span class="s2">&quot;str or list of str. Name of the observables measured &quot;</span>
+        <span class="s2">&quot;at the end of the circuit. By default &#39;Z&#39;*nqbits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Backent to run the neural network. By default we use the default.qubit backend from Pennylane.&quot;</span>
+    <span class="p">}</span>
+    <span class="n">required_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;input_size&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Dimension of the input data&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;n_layers&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Number of layers of the ansatz quantum circuit&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;str. Name of the data encoding method. Implemented: &quot;</span>
+        <span class="s2">&quot;Qubit encoding, amplitude encoding and ZZFeatureMap.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ansatz&quot;</span><span class="p">:</span> <span class="s2">&quot;int. Number associated to the ansatz quantum circuit. &quot;</span>
+        <span class="s2">&quot;Implemented: 1-6 corresponding to circuit_10, circuit_9, circuit_15, &quot;</span>
+        <span class="s2">&quot;circuit_14, circuit_13, circuit_6&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;observables&quot;</span><span class="p">:</span> <span class="s2">&quot;str or list of str. Name of the observables measured &quot;</span>
+        <span class="s2">&quot;at the end of the circuit. By default &#39;Z&#39;*nqbits. If observables=&#39;&#39; &quot;</span>
+        <span class="s2">&quot;then the probabilities are measured at the end of the circuit and &quot;</span>
+        <span class="s2">&quot;the output has dimension equal to the number of qubits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;Backent to run the neural network. By default we use the default.qubit backend from Pennylane.&quot;</span>
+    <span class="p">}</span>
+    <span class="n">example_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;input_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;n_layers&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;qubit&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ansatz&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;observables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ZIII&#39;</span><span class="p">,</span> <span class="s1">&#39;IZII&#39;</span><span class="p">,</span> <span class="s1">&#39;IIZI&#39;</span><span class="p">,</span> <span class="s1">&#39;IIIZ&#39;</span><span class="p">],</span>
+        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;default.qubit&quot;</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;qubit&#39;</span><span class="p">,</span> <span class="n">ansatz</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">observables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;default.qubit&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_size</span> <span class="o">=</span> <span class="n">input_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span> <span class="o">=</span> <span class="n">n_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+
+        <span class="c1"># Calculate the number of qubits needed for the data encoding</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;amplitude&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_size</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_size</span>
+
+        <span class="n">ansatz_names</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;circuit_10&quot;</span><span class="p">,</span> <span class="s2">&quot;circuit_9&quot;</span><span class="p">,</span> <span class="s2">&quot;circuit_15&quot;</span><span class="p">,</span> <span class="s2">&quot;circuit_14&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;circuit_13&quot;</span><span class="p">,</span> <span class="s2">&quot;circuit_6&quot;</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ansatz</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span> <span class="ow">or</span> <span class="n">ansatz</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ansatz</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s1">&#39;Choose a quantum ansatz between 1 and 6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span> <span class="o">=</span> <span class="n">ansatz_names</span><span class="p">[</span><span class="n">ansatz</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_shapes</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">observables</span> <span class="o">=</span> \
+            <span class="s2">&quot;Z&quot;</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span> <span class="k">if</span> <span class="n">observables</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">observables</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span> <span class="c1"># Convert to operators</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observables</span> <span class="o">=</span> <span class="p">[</span><span class="n">qml</span><span class="o">.</span><span class="n">pauli</span><span class="o">.</span><span class="n">string_to_pauli_word</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">qml</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Quantum encodings</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_qubit_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nqbits</span><span class="p">,</span> <span class="n">feature_vector</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the circuit that performs qubit encoding.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            nqbits (int): Number of qubits</span>
+<span class="sd">            feature_vector (array): input data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qml</span><span class="o">.</span><span class="n">AngleEmbedding</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">feature_vector</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">),</span> <span class="n">rotation</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ZZFeatureMap_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nqbits</span><span class="p">,</span> <span class="n">feature_vector</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the circuit that performs ZZFeatureMap encoding.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            nqbits (int): Number of qubits</span>
+<span class="sd">            feature_vector (array): Input data</span>
+<span class="sd">            n_layers (int): Number of layers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">Hadamard</span><span class="p">(</span><span class="n">wires</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">U1</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">feature_vector</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span><span class="n">i</span><span class="p">)</span>
+            <span class="c1"># CNOT + hadamard</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">qml</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">U1</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">feature_vector</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">feature_vector</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">qml</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="p">[</span><span class="n">nqbits</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_amplitude_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_vector</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the circuit that performs amplitude encoding.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            feature_vector (array): Input data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qml</span><span class="o">.</span><span class="n">AmplitudeEmbedding</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">feature_vector</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">),</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_QAOA_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_vector</span><span class="p">,</span> <span class="n">input_weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the circuit that performs QAOA encoding. Notice that this encoding has trainable parameters</span>
+<span class="sd">        Args:</span>
+<span class="sd">            feature_vector (array): Input data</span>
+<span class="sd">            input_weights (array): shape (L,1) for 1 qubit, (L,3) for two qubits and (L, 2*nqbits) otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qml</span><span class="o">.</span><span class="n">QAOAEmbedding</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">feature_vector</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">input_weights</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_vector</span><span class="p">)))</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Quantum ansatz</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_circuit_10</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum circuit corresponding to the circuit_10 ansatz</span>
+<span class="sd">        (option 1)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qbits (int): Qubits to apply this circuit</span>
+<span class="sd">            weights (array): shape (n_layers, nqbits, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Choose the number of layers of the PQC</span>
+        <span class="n">qml</span><span class="o">.</span><span class="n">StronglyEntanglingLayers</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_circuit_6</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum circuit corresponding to the circuit_6 ansatz</span>
+<span class="sd">        (option 6)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qbits (int): Qubits to apply this circuit</span>
+<span class="sd">            weights (array): shape (nqbits, [ 1 (Rx1) + 1 (Rz1) + 1 x nqbits -1 (cRx) + 1 (Rx2) + 1 (Rz2)] x n_layers)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">nqbits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+        <span class="n">n_layers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="p">(</span><span class="n">nqbits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="c1"># First Rx layer</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RX</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span> <span class="o">+</span> <span class="n">layer</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c1"># First RZ layer</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RZ</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span> <span class="o">+</span> <span class="n">layer</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="c1"># Controlled Rx</span>
+            <span class="n">l_idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>  <span class="c1"># i = controlled qubits</span>
+                <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">q</span><span class="p">:</span>
+                        <span class="n">l_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="c1"># Can&#39;t link to itself</span>
+                        <span class="k">continue</span>
+                    <span class="n">ly</span> <span class="o">=</span> <span class="n">l_idx</span><span class="o">//</span><span class="n">nqbits</span>
+                    <span class="n">lx</span> <span class="o">=</span> <span class="n">l_idx</span><span class="o">%</span><span class="n">nqbits</span>
+                    <span class="n">qml</span><span class="o">.</span><span class="n">CRX</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">lx</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">ly</span> <span class="o">+</span> <span class="n">layer</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="p">[</span><span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="n">q</span><span class="p">]])</span>
+                    <span class="n">l_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Second Rx layer</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RX</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span> <span class="o">+</span> <span class="n">nqbits</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">layer</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c1"># Second Ry layer</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RZ</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span> <span class="o">+</span> <span class="n">nqbits</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">layer</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_circuit_9</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum circuit corresponding to the circuit_9 ansatz</span>
+<span class="sd">        (option 2)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qbits (int): Qubits to apply this circuit</span>
+<span class="sd">            weights (array): shape (nqbits,  n_layers)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_layers</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">nqbits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+        <span class="n">qbit_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">):</span>
+
+            <span class="c1"># 1. Hadamard</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">Hadamard</span><span class="p">(</span><span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">q</span><span class="p">])</span>
+
+            <span class="c1"># 2. Phase shifts</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">qbit_list</span><span class="p">:</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">CZ</span><span class="p">(</span><span class="n">wires</span> <span class="o">=</span> <span class="p">[</span><span class="n">qubits</span><span class="p">[</span><span class="n">qbit1</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="n">qbit2</span><span class="p">]])</span>
+
+            <span class="c1"># 3. Ry gates</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RX</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">q</span><span class="p">,</span> <span class="n">layer</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">q</span><span class="p">])</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_circuit_15</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum circuit corresponding to the circuit_15 ansatz</span>
+<span class="sd">        (option 3)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qbits (int): Qubits to apply this circuit</span>
+<span class="sd">            weights (array): shape (n_layers, nqbits)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qml</span><span class="o">.</span><span class="n">BasicEntanglerLayers</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">wires</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_circuit_14</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum circuit corresponding to the circuit_14 ansatz</span>
+<span class="sd">        (option 4)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qbits (int): Qubits to apply this circuit</span>
+<span class="sd">            weights (array): shape (nqbits ,  [1 (Ry1) + 1 (CRx1) + 1 (Ry2) + 1 (CRx2)]*n_layers)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_layers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">nqbits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+        <span class="n">qbit_list</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">qbit_list2</span> <span class="o">=</span> <span class="p">[(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">2</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="c1"># 1. Ry gates</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RY</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="c1"># 2. Controlled Rx</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">qbit_list</span><span class="p">:</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">CRX</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="p">[</span><span class="n">qubits</span><span class="p">[</span><span class="n">qbit2</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="n">qbit1</span><span class="p">]])</span>
+
+            <span class="c1"># 3. Ry gates</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RY</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="c1"># 4. Controlled Rx</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">qbit_list2</span><span class="p">:</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">CRX</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="p">[</span><span class="n">qubits</span><span class="p">[</span><span class="n">qbit2</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="n">qbit1</span><span class="p">]])</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_circuit_13</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the quantum circuit corresponding to the circuit_9 ansatz</span>
+<span class="sd">        (option 5)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            qbits (int): Qubits to apply this circuit</span>
+<span class="sd">            weights (array): shape (nqbits x [1 (Ry1) + 1 (CRx1) + 1 (Ry2) + 1 (CRx2)]*n_layers)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_layers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">nqbits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+        <span class="n">qbit_list</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">qbit_list2</span> <span class="o">=</span> <span class="p">[(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">nqbits</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nqbits</span><span class="o">-</span><span class="mi">2</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="c1"># 1. Ry gates</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RY</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="c1"># 2. Controlled Rx</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">qbit_list</span><span class="p">:</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">CRZ</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="p">[</span><span class="n">qubits</span><span class="p">[</span><span class="n">qbit2</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="n">qbit1</span><span class="p">]])</span>
+
+            <span class="c1"># 3. Ry gates</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nqbits</span><span class="p">):</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">RY</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="c1"># 4. Controlled Rx</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">qbit1</span><span class="p">,</span> <span class="n">qbit2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">qbit_list2</span><span class="p">:</span>
+                <span class="n">qml</span><span class="o">.</span><span class="n">CRZ</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span> <span class="o">+</span> <span class="n">layer</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">wires</span> <span class="o">=</span> <span class="p">[</span><span class="n">qubits</span><span class="p">[</span><span class="n">qbit2</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="n">qbit1</span><span class="p">]])</span>
+<div class="viewcode-block" id="QuantumFCLayer.apply_ansatz">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.apply_ansatz">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_ansatz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights_layer</span><span class="p">,</span> <span class="n">qubits</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies the quantum ansatz to the quantum neural network.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            weight_layers (array): Weights of the ansatz layer</span>
+<span class="sd">            qubits: qubits to apply the ansatz to</span>
+<span class="sd">        returns:</span>
+<span class="sd">            (QuantumNN): quantum neural network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ansatz</span>
+        <span class="n">name_to_func</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;circuit_10&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circuit_10</span><span class="p">,</span>
+            <span class="s2">&quot;circuit_6&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circuit_6</span><span class="p">,</span>
+            <span class="s2">&quot;circuit_9&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circuit_9</span><span class="p">,</span>
+            <span class="s2">&quot;circuit_15&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circuit_15</span><span class="p">,</span>
+            <span class="s2">&quot;circuit_14&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circuit_14</span><span class="p">,</span>
+            <span class="s2">&quot;circuit_13&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circuit_13</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name_to_func</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Quantum Circuit model &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="si">}</span><span class="s2">&#39; not implemented. &quot;</span>
+                <span class="s2">&quot;Implemented models: &quot;</span> <span class="o">+</span>
+                <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">name_to_func</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">qubits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">qubits</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+        <span class="c1"># Apply anstatz</span>
+        <span class="n">name_to_func</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="p">](</span><span class="n">qubits</span><span class="p">,</span> <span class="n">weights_layer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="o">!=</span><span class="kc">False</span><span class="p">:</span>
+            <span class="c1"># Return measurements</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="o">==</span><span class="s1">&#39;probs&#39;</span><span class="p">:</span>  <span class="c1"># Case 1: Measuring probabilities</span>
+                <span class="k">return</span> <span class="n">qml</span><span class="o">.</span><span class="n">probs</span><span class="p">(</span><span class="n">wires</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="o">==</span><span class="s1">&#39;state&#39;</span><span class="p">:</span>  <span class="c1"># Case 2: Measuring states</span>
+                <span class="k">return</span> <span class="n">qml</span><span class="o">.</span><span class="n">state</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># Case 3: Measuring observables</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">qml</span><span class="o">.</span><span class="n">expval</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="QuantumFCLayer.qnn_layer">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">qnn_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span> <span class="n">weights_layers</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the quantum neural network composed of the quantum encoding with qubit, amplitude or ZZ encoding, </span>
+<span class="sd">        and a quantum ansatz.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (array): Input data</span>
+<span class="sd">            weight_layers (array): Weights of the ansatz layer</span>
+<span class="sd">        returns:</span>
+<span class="sd">            (QuantumNN): quantum neural network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Data encoding</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;angle&#39;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;qubit&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_qubit_encoding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;amplitude&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude_encoding</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;ZZFeatureMap&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ZZFeatureMap_encoding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Data encoding method not implemented&#39;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_ansatz</span><span class="p">(</span><span class="n">weights_layers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="QuantumFCLayer.qnn_layer_QAOA">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.qnn_layer_QAOA">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">qnn_layer_QAOA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span> <span class="n">weights_layers</span><span class="p">,</span> <span class="n">weights_input</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the quantum neural network composed of the quantum encoding with QAOA encoding, </span>
+<span class="sd">        and a quantum ansatz.</span>
+<span class="sd">        Args</span>
+<span class="sd">            inputs (array): Input data</span>
+<span class="sd">            weight_layers (array): Weights of the ansatz layer</span>
+<span class="sd">            weight_input (array): Weights of the QAOA quantum encoding</span>
+<span class="sd">        returns:</span>
+<span class="sd">            (QuantumNN): quantum neural network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Data encoding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_QAOA_encoding</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">weights_input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_ansatz</span><span class="p">(</span><span class="n">weights_layers</span><span class="p">)</span></div>
+
+
+        
+<div class="viewcode-block" id="QuantumFCLayer.get_shapes">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.get_shapes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_shapes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Define weight shapes</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="o">==</span><span class="s1">&#39;circuit_10&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> 
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="o">==</span><span class="s1">&#39;circuit_6&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,(</span><span class="mi">3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="o">==</span><span class="s1">&#39;circuit_9&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">)</span> 
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="o">==</span><span class="s1">&#39;circuit_15&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span> <span class="o">=</span>  <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span> 
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="o">==</span><span class="s1">&#39;circuit_14&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">)</span> 
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ansatz</span><span class="o">==</span><span class="s1">&#39;circuit_13&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">)</span> </div>
+
+
+<div class="viewcode-block" id="QuantumFCLayer.create_layer">
+<a class="viewcode-back" href="../../../ingenii_quantum.hybrid_networks.html#ingenii_quantum.hybrid_networks.layers.QuantumFCLayer.create_layer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_layer</span><span class="o">=</span><span class="s1">&#39;keras&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a Quantum fully connected layer and initializes it.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            type_layer (str): Type of quantum layer. It can either be &#39;keras&#39; or &#39;torch&#39;</span>
+<span class="sd">        returns:</span>
+<span class="sd">            Quantum layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Define weight input shapes</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;QAOA&#39;</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2 layers</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span><span class="p">)</span>
+            <span class="n">shapes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weights_input&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_input_shape</span><span class="p">,</span> <span class="s2">&quot;weights_layers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span><span class="p">}</span> <span class="c1"># Define shapes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qnode</span> <span class="o">=</span> <span class="n">qml</span><span class="o">.</span><span class="n">QNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnn_layer_QAOA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">)</span> <span class="c1"># Create quantum node</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shapes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weights_layers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_shape</span><span class="p">}</span> <span class="c1"># Define shapes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qnode</span> <span class="o">=</span> <span class="n">qml</span><span class="o">.</span><span class="n">QNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnn_layer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">)</span><span class="c1"># Create quantum node</span>
+        <span class="c1"># Create quantum layer</span>
+        <span class="k">if</span> <span class="n">type_layer</span><span class="o">==</span><span class="s1">&#39;keras&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">output_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">nqbits</span>
+            <span class="n">qlayer</span> <span class="o">=</span> <span class="n">qml</span><span class="o">.</span><span class="n">qnn</span><span class="o">.</span><span class="n">KerasLayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnode</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="n">output_dim</span><span class="p">)</span> <span class="c1"># Create keras layer</span>
+        <span class="k">elif</span> <span class="n">type_layer</span><span class="o">==</span><span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">==</span><span class="s1">&#39;QAOA&#39;</span><span class="p">:</span> 
+                <span class="n">init_method</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weights_layers&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">,</span> <span class="s2">&quot;weights_input&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">init_method</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weights_layers&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">}</span>
+            <span class="n">qlayer</span> <span class="o">=</span> <span class="n">qml</span><span class="o">.</span><span class="n">qnn</span><span class="o">.</span><span class="n">TorchLayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnode</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">init_method</span><span class="o">=</span><span class="n">init_method</span><span class="p">)</span> <span class="c1"># Create Torch layer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s1">&#39;type_layer should either be keras or torch.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">qlayer</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ingenii.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
