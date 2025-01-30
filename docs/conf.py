@@ -10,8 +10,11 @@ import sys
 import ingenii_quantum
 print(f"Successfully imported ingenii_quantum")
 
+# Debugging: Print the installed package path
+print(f"Successfully imported ingenii_quantum from {os.path.dirname(ingenii_quantum.__file__)}")
+
 # Add the package's source directory to sys.path
-sys.path.insert(0, os.path.abspath("../../"))  # Adjust if needed
+sys.path.insert(0, os.path.dirname(ingenii_quantum.__file__))
 
 # Debugging: Print to confirm Sphinx is using the correct path
 print("Sphinx is using:", sys.path[0])
