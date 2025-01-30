@@ -35,6 +35,7 @@ extensions = [
     "sphinx.ext.napoleon",   # Supports Google/NumPy-style docstrings
     "sphinx.ext.viewcode",   # Adds source code links
 ]
+autodoc_mock_imports = ["ingenii_quantum"]
 
 
 # -- Options for HTML output -------------------------------------------------
