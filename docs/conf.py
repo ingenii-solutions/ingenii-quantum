@@ -8,8 +8,6 @@
 import os
 import sys
 import ingenii_quantum
-print(f"Successfully imported ingenii_quantum")
-
 # Debugging: Print the installed package path
 print(f"Successfully imported ingenii_quantum from {os.path.dirname(ingenii_quantum.__file__)}")
 
