@@ -7,6 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os
 import sys
+import ingenii_quantum
+print(f"Successfully imported ingenii_quantum: {ingenii_quantum.__version__}")
 
 # Add the package's source directory to sys.path
 sys.path.insert(0, os.path.abspath("../../"))  # Adjust if needed

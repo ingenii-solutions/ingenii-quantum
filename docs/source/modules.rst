@@ -1,7 +1,7 @@
 ingenii_quantum
-===============
+=================
 
-.. toctree::
-   :maxdepth: 4
-
-   ingenii_quantum
+.. automodule:: ingenii_quantum
+   :members:
+   :undoc-members:
+   :show-inheritance:
