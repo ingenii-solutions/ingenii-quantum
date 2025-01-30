@@ -1,2 +1,4 @@
 sphinx
 sphinx_rtd_theme
+--extra-index-url https://test.pypi.org/simple/
+ingenii-quantum
