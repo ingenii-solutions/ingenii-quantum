@@ -21,3 +21,5 @@ python:
    install:
    - requirements: docs/requirements.txt
         
+mkdocs:
+  enable: false
