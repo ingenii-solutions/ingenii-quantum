@@ -86,7 +86,7 @@ Provides the graph mapping for image segmentation and the formulation as a QUBO 
 Many quantum and quantum-inspired algorithms, such as quantum annealing and QAOA, can then be used to find the optimal segmentation mask.
 
 Installation
-==========
+============
 
 To install Ingenii Quantum, run:
    
@@ -105,7 +105,7 @@ User Guide
 
 
 API Reference
-==========
+=============
 
 .. toctree::
    :maxdepth: 2
