@@ -4,7 +4,7 @@ Welcome to Ingenii Quantum's Documentation!
 Ingenii Quantum is a Python package for quantum and quantum-inspired machine learning.
 
 **Have questions?** Reach out to us on our Discord server in the channel #-algo-library
-[Join Now](https://discord.com/invite/GwCe4ZzgbR)
+`Join Now <https://discord.com/invite/GwCe4ZzgbR>`_
 
 Quantum Convolutional Layer (2D and 3D)
 ---------------------------------------
@@ -89,7 +89,7 @@ Provides the graph mapping for image segmentation and the formulation as a QUBO 
 Many quantum and quantum-inspired algorithms, such as quantum annealing and QAOA, can then be used to find the optimal segmentation mask.
 
 **Enjoying the library?** Access more resources when you join our Quantum Community. 
-[Join Now](https://research.typeform.com/to/ZxkXUhm7)
+`Join Now <https://research.typeform.com/to/ZxkXUhm7>`_ 
  
 
 Installation
