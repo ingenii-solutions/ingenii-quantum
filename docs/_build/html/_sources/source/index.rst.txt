@@ -3,8 +3,12 @@ Welcome to Ingenii Quantum's Documentation!
 
 Ingenii Quantum is a Python package for quantum and quantum-inspired machine learning.
 
+**Have questions?** Reach out to us on our Discord server in the channel #-algo-library
+`Join Now <https://discord.com/invite/GwCe4ZzgbR>`_
+
 Quantum Convolutional Layer (2D and 3D)
 ---------------------------------------
+
 It is designed to reduce the complexity of the classical 2D/3D CNN while maintaining its prediction performance. 
 The hybrid CNN replaces a convolutional layer with a quantum convolutional layer. Each classical convolutional filter 
 is replaced by a quantum circuit, which acts as a quantum filter. Each quantum circuit is divided into two blocks: 
@@ -14,6 +18,7 @@ and for 3D data (volumes).
 
 Quantum Fully-Connected Layer
 ------------------------------
+
 It is designed to construct hybrid quantum-classical neural networks, where the quantum layer is a fully-connected layer. 
 The quantum layer is a parameterized quantum circuit composed of three parts: a data encoding that maps the classical data 
 into a quantum circuit, a parameterized quantum circuit that performs quantum operations with trainable parameters, 
@@ -25,6 +30,7 @@ You can still run the algorithm on Qiskit devices by providing the suitable back
 
 Quantum Fusion Model
 ---------------------
+
 It is designed to efficiently integrate the extracted features from two classical neural network models to produce enhanced predictions. 
 The proposed model strategically integrates 3D-CNNs and SG-CNNs to leverage their respective strengths in processing diverse 
 facets of the training data. The simulation results demonstrate the superior performance of the quantum fusion model 
@@ -36,12 +42,14 @@ Performs edge detection for 2D data (images) and 3D data (volumes) using quantum
 
 Quantum-Inspired Image Filter
 -----------------------------
+
 This quantum-inspired filter is especially useful for highlighting regions with varying contrast and identifying regions of interest. 
 This transformation adjusts pixel intensity based on its local contrast and overall neighborhood contribution, enhancing segmentation 
 by emphasizing boundaries and transitions in the image.
 
 Quantum State Visualizations
 ----------------------------
+
 To understand the behavior and transformations of quantum circuits, visualizations play a key role. 
 This library offers multiple state and circuit visualizations:
 
@@ -57,6 +65,7 @@ This library offers multiple state and circuit visualizations:
 
 Quantum Neural Network Statistics
 ---------------------------------
+
 Provides metrics to evaluate the balance between performance and complexity in quantum neural networks. Two key metrics are:
 
 - **Entangling Capacity**: Measures the circuit's ability to generate entanglement among qubits. This property is crucial for 
@@ -66,6 +75,7 @@ Provides metrics to evaluate the balance between performance and complexity in q
 
 Tensor Network Decomposition
 ----------------------------
+
 One of the most effective tensor decompositions for compressing convolutional layers is the Tucker decomposition. 
 This method breaks down the original four-dimensional weight tensor of a convolutional layer into multiple smaller tensors. 
 This approach is particularly relevant in medical imaging, where small datasets and complex models are common. 
@@ -74,29 +84,39 @@ the number of parameters, making the model faster and more efficient.
 
 Quantum Optimization for Image Segmentation
 -------------------------------------------
+
 Provides the graph mapping for image segmentation and the formulation as a QUBO problem. 
 Many quantum and quantum-inspired algorithms, such as quantum annealing and QAOA, can then be used to find the optimal segmentation mask.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   modules
+**Enjoying the library?** Access more resources when you join our Quantum Community. 
+`Join Now <https://research.typeform.com/to/ZxkXUhm7>`_ 
+ 
 
 Installation
-------------
+============
+
 To install Ingenii Quantum, run:
    
 .. code-block:: bash
 
     pip install ingenii-quantum
 
-Table of Contents
-=================
+User Guide
+==========
 
 .. toctree::
    :maxdepth: 2
-   :caption: User Guide
+   :caption: User Guide:
 
-   installation
+   source/installation
+
+
+API Reference
+=============
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference:
+
+   source/modules
 
